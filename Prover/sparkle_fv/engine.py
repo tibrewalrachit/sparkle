@@ -64,6 +64,16 @@ class Engine:
         self.zero_init = zero_init_free_states
         self.verbose = verbose
 
+    def _zero_of(self, st: z3.ExprRef, frame: int) -> z3.BoolRef:
+        """Frame-0 zero constraint matching Verilator's two-state init —
+        for registers AND memories (constant-zero arrays), so traces always
+        replay deterministically in simulation."""
+        v = self.ts.expr_at(st, frame)
+        if z3.is_array(st):
+            elem = st.sort().range()
+            return v == z3.K(st.sort().domain(), z3.BitVecVal(0, elem.size()))
+        return v == z3.BitVecVal(0, st.sort().size())
+
     # ------------------------------------------------------------------ BMC
     def bmc(self, max_depth: int, timeout_s: float = 600.0,
             start_depth: int = 0) -> Verdict:
@@ -75,8 +85,7 @@ class Engine:
             s.add(f)
         if self.zero_init:
             for st in self.ts.uninit_states:
-                if isinstance(st.sort(), z3.BitVecSortRef):
-                    s.add(self.ts.expr_at(st, 0) == z3.BitVecVal(0, st.sort().size()))
+                s.add(self._zero_of(st, 0))
         depth = 0
         for k in range(0, max_depth + 1):
             depth = k
@@ -203,8 +212,7 @@ class Engine:
             s0.add(f)
         if self.zero_init:
             for st in self.ts.uninit_states:
-                if isinstance(st.sort(), z3.BitVecSortRef):
-                    s0.add(self.ts.expr_at(st, 0) == z3.BitVecVal(0, st.sort().size()))
+                s0.add(self._zero_of(st, 0))
         for c in self.ts.constraints_at(0):
             s0.add(c)
         surviving = []
