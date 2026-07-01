@@ -174,7 +174,7 @@ def verify_design(sv_path: Path, top: str, out_dir: Path,
         try:
             from .formalize import formalize
             res = formalize(frontend.load_netlist(comp.json_file), top,
-                            out_dir / "lean")
+                            out_dir / "lean", sv_path=sv_path)
             report.formalize = {
                 "lean_file": str(res.lean_file),
                 "props_file": str(res.props_file) if res.props_file else None,

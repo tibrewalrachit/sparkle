@@ -1,0 +1,231 @@
+<?xml version="1.0" ?>
+<!-- DESCRIPTION: Verilator output: XML representation of netlist -->
+<verilator_xml>
+  <files>
+    <file id="c" filename="/usr/share/verilator/include/verilated_std.sv" language="1800-2017"/>
+    <file id="a" filename="&lt;built-in&gt;" language="1800-2017"/>
+    <file id="b" filename="&lt;command-line&gt;" language="1800-2017"/>
+    <file id="d" filename="benchmarks/blocks/gray_counter/design.sv" language="1800-2017"/>
+  </files>
+  <module_files>
+    <file id="d" filename="benchmarks/blocks/gray_counter/design.sv" language="1800-2017"/>
+  </module_files>
+  <cells>
+    <cell loc="d,9,8,9,20" name="gray_counter" submodname="gray_counter" hier="gray_counter"/>
+  </cells>
+  <netlist>
+    <module loc="d,9,8,9,20" name="gray_counter" origName="gray_counter" topModule="1">
+      <var loc="d,10,18,10,21" name="clk" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk"/>
+      <var loc="d,11,18,11,21" name="rst" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="rst"/>
+      <var loc="d,12,18,12,20" name="en" dtype_id="1" dir="input" pinIndex="3" vartype="logic" origName="en"/>
+      <var loc="d,13,24,13,32" name="gray_out" dtype_id="2" dir="output" pinIndex="4" vartype="logic" origName="gray_out"/>
+      <var loc="d,15,17,15,20" name="bin" dtype_id="2" vartype="logic" origName="bin"/>
+      <initialstatic loc="d,15,29,15,33">
+        <assign loc="d,15,29,15,33" dtype_id="2">
+          <const loc="d,15,29,15,33" name="8&apos;h0" dtype_id="2"/>
+          <varref loc="d,15,29,15,33" name="bin" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,16,17,16,21" name="gray" dtype_id="2" vartype="logic" origName="gray"/>
+      <initialstatic loc="d,16,29,16,33">
+        <assign loc="d,16,29,16,33" dtype_id="2">
+          <const loc="d,16,29,16,33" name="8&apos;h0" dtype_id="2"/>
+          <varref loc="d,16,29,16,33" name="gray" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,17,17,17,26" name="gray_prev" dtype_id="2" vartype="logic" origName="gray_prev"/>
+      <initialstatic loc="d,17,29,17,33">
+        <assign loc="d,17,29,17,33" dtype_id="2">
+          <const loc="d,17,29,17,33" name="8&apos;h0" dtype_id="2"/>
+          <varref loc="d,17,29,17,33" name="gray_prev" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,18,17,18,22" name="moved" dtype_id="1" vartype="logic" origName="moved"/>
+      <initialstatic loc="d,18,29,18,33">
+        <assign loc="d,18,29,18,33" dtype_id="1">
+          <const loc="d,18,29,18,33" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,18,29,18,33" name="moved" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,20,16,20,24" name="bin_next" dtype_id="2" vartype="logic" origName="bin_next"/>
+      <var loc="d,21,16,21,25" name="gray_next" dtype_id="2" vartype="logic" origName="gray_next"/>
+      <always loc="d,23,5,23,14">
+        <sentree loc="d,23,15,23,16">
+          <senitem loc="d,23,17,23,24" edgeType="POS">
+            <varref loc="d,23,25,23,28" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,23,30,23,35">
+          <if loc="d,24,9,24,11">
+            <varref loc="d,24,13,24,16" name="rst" dtype_id="1"/>
+            <begin>
+              <begin loc="d,24,18,24,23">
+                <assigndly loc="d,25,23,25,25" dtype_id="2">
+                  <const loc="d,25,26,25,30" name="8&apos;h0" dtype_id="2"/>
+                  <varref loc="d,25,13,25,16" name="bin" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,26,23,26,25" dtype_id="2">
+                  <const loc="d,26,26,26,30" name="8&apos;h0" dtype_id="2"/>
+                  <varref loc="d,26,13,26,17" name="gray" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,27,23,27,25" dtype_id="2">
+                  <const loc="d,27,26,27,30" name="8&apos;h0" dtype_id="2"/>
+                  <varref loc="d,27,13,27,22" name="gray_prev" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,28,23,28,25" dtype_id="1">
+                  <const loc="d,28,26,28,30" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="d,28,13,28,18" name="moved" dtype_id="1"/>
+                </assigndly>
+              </begin>
+            </begin>
+            <begin>
+              <if loc="d,29,18,29,20">
+                <varref loc="d,29,22,29,24" name="en" dtype_id="1"/>
+                <begin>
+                  <begin loc="d,29,26,29,31">
+                    <assigndly loc="d,30,23,30,25" dtype_id="2">
+                      <varref loc="d,30,26,30,34" name="bin_next" dtype_id="2"/>
+                      <varref loc="d,30,13,30,16" name="bin" dtype_id="2"/>
+                    </assigndly>
+                    <assigndly loc="d,31,23,31,25" dtype_id="2">
+                      <varref loc="d,31,26,31,35" name="gray_next" dtype_id="2"/>
+                      <varref loc="d,31,13,31,17" name="gray" dtype_id="2"/>
+                    </assigndly>
+                    <assigndly loc="d,32,23,32,25" dtype_id="2">
+                      <varref loc="d,32,26,32,30" name="gray" dtype_id="2"/>
+                      <varref loc="d,32,13,32,22" name="gray_prev" dtype_id="2"/>
+                    </assigndly>
+                    <assigndly loc="d,33,23,33,25" dtype_id="1">
+                      <const loc="d,33,26,33,30" name="1&apos;h1" dtype_id="1"/>
+                      <varref loc="d,33,13,33,18" name="moved" dtype_id="1"/>
+                    </assigndly>
+                  </begin>
+                </begin>
+              </if>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <var loc="d,42,16,42,20" name="diff" dtype_id="2" vartype="logic" origName="diff"/>
+      <var loc="d,43,10,43,21" name="diff_onehot" dtype_id="1" vartype="logic" origName="diff_onehot"/>
+      <always loc="d,45,5,45,11">
+        <sentree loc="d,45,12,45,13">
+          <senitem loc="d,45,14,45,21" edgeType="POS">
+            <varref loc="d,45,22,45,25" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,45,27,45,32">
+          <if loc="d,47,9,47,15">
+            <cexpr loc="d,47,9,47,15" dtype_id="1">
+              <text loc="d,47,9,47,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,47,9,47,15">
+                <neq loc="d,47,22,47,24" dtype_id="1">
+                  <varref loc="d,47,17,47,21" name="gray" dtype_id="2"/>
+                  <xor loc="d,47,30,47,31" dtype_id="2">
+                    <varref loc="d,47,26,47,29" name="bin" dtype_id="2"/>
+                    <shiftr loc="d,47,37,47,39" dtype_id="2">
+                      <varref loc="d,47,33,47,36" name="bin" dtype_id="2"/>
+                      <const loc="d,47,40,47,41" name="32&apos;sh1" dtype_id="3"/>
+                    </shiftr>
+                  </xor>
+                </neq>
+                <begin>
+                  <display loc="d,47,9,47,15" displaytype="$write">
+                    <sformatf loc="d,47,9,47,15" name="[%0t] %%Error: design.sv:47: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="4">
+                      <time loc="d,47,9,47,15" dtype_id="5"/>
+                      <scopename loc="d,47,9,47,15" dtype_id="5"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,47,9,47,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,49,9,49,11">
+            <varref loc="d,49,13,49,18" name="moved" dtype_id="1"/>
+            <begin>
+              <if loc="d,50,13,50,19">
+                <cexpr loc="d,50,13,50,19" dtype_id="1">
+                  <text loc="d,50,13,50,19"/>
+                </cexpr>
+                <begin>
+                  <if loc="d,50,13,50,19">
+                    <not loc="d,50,21,50,32" dtype_id="1">
+                      <varref loc="d,50,21,50,32" name="diff_onehot" dtype_id="1"/>
+                    </not>
+                    <begin>
+                      <display loc="d,50,13,50,19" displaytype="$write">
+                        <sformatf loc="d,50,13,50,19" name="[%0t] %%Error: design.sv:50: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="4">
+                          <time loc="d,50,13,50,19" dtype_id="5"/>
+                          <scopename loc="d,50,13,50,19" dtype_id="5"/>
+                        </sformatf>
+                      </display>
+                      <stop loc="d,50,13,50,19"/>
+                    </begin>
+                  </if>
+                </begin>
+              </if>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <contassign loc="d,37,21,37,22" dtype_id="2">
+        <varref loc="d,16,17,16,21" name="gray" dtype_id="2"/>
+        <varref loc="d,13,24,13,32" name="gray_out" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,43,22,43,23" dtype_id="1">
+        <and loc="d,43,39,43,41" dtype_id="1">
+          <neq loc="d,43,30,43,32" dtype_id="1">
+            <const loc="d,43,33,43,37" name="8&apos;h0" dtype_id="2"/>
+            <varref loc="d,42,28,42,29" name="diff" dtype_id="2"/>
+          </neq>
+          <eq loc="d,43,66,43,68" dtype_id="1">
+            <const loc="d,43,69,43,73" name="8&apos;h0" dtype_id="2"/>
+            <and loc="d,43,49,43,50" dtype_id="2">
+              <varref loc="d,42,28,42,29" name="diff" dtype_id="2"/>
+              <sub loc="d,43,57,43,58" dtype_id="2">
+                <varref loc="d,42,28,42,29" name="diff" dtype_id="2"/>
+                <const loc="d,43,59,43,63" name="8&apos;h1" dtype_id="2"/>
+              </sub>
+            </and>
+          </eq>
+        </and>
+        <varref loc="d,43,10,43,21" name="diff_onehot" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,42,21,42,22" dtype_id="2">
+        <xor loc="d,42,28,42,29" dtype_id="2">
+          <varref loc="d,16,17,16,21" name="gray" dtype_id="2"/>
+          <varref loc="d,17,17,17,26" name="gray_prev" dtype_id="2"/>
+        </xor>
+        <varref loc="d,42,16,42,20" name="diff" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,20,26,20,27" dtype_id="2">
+        <add loc="d,20,32,20,33" dtype_id="2">
+          <const loc="d,20,34,20,38" name="8&apos;h1" dtype_id="2"/>
+          <varref loc="d,15,17,15,20" name="bin" dtype_id="2"/>
+        </add>
+        <varref loc="d,20,16,20,24" name="bin_next" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,21,26,21,27" dtype_id="2">
+        <xor loc="d,21,37,21,38" dtype_id="2">
+          <varref loc="d,20,32,20,33" name="bin_next" dtype_id="2"/>
+          <shiftr loc="d,21,49,21,51" dtype_id="2">
+            <varref loc="d,20,32,20,33" name="bin_next" dtype_id="2"/>
+            <const loc="d,21,52,21,53" name="32&apos;sh1" dtype_id="3"/>
+          </shiftr>
+        </xor>
+        <varref loc="d,21,16,21,25" name="gray_next" dtype_id="2"/>
+      </contassign>
+    </module>
+    <typetable loc="a,0,0,0,0">
+      <voiddtype loc="c,51,21,51,30" id="6"/>
+      <basicdtype loc="d,10,12,10,17" id="1" name="logic"/>
+      <basicdtype loc="d,13,12,13,17" id="2" name="logic" left="7" right="0"/>
+      <basicdtype loc="d,21,52,21,53" id="3" name="logic" left="31" right="0" signed="true"/>
+      <basicdtype loc="d,47,9,47,15" id="4" name="string"/>
+      <basicdtype loc="d,47,9,47,15" id="5" name="QData" left="63" right="0"/>
+    </typetable>
+  </netlist>
+</verilator_xml>

@@ -20,8 +20,15 @@ Yosys bit-level netlists are regrouped into word-level nets by an internal
 Public API::
 
     formalize(netlist: dict, top: str, out_dir: Path,
-              mode: str = "circuitm",
-              properties: list[dict] | None = None) -> FormalizeResult
+              mode: str = "signal",
+              properties: list[dict] | None = None,
+              sv_path: Path | None = None) -> FormalizeResult
+
+In the default "signal" mode, when ``sv_path`` (the original behavioral
+SystemVerilog) is provided, the PRIMARY path is a source-to-source
+translation into idiomatic Signal DSL via ``sparkle_fv.translate``
+(Verilator XML AST); the netlist-based circuitm reconstruction remains
+the fallback.
 
 Stdlib only; Python 3.10+.
 """
@@ -1350,20 +1357,30 @@ def _render_signal(d: _Design, cap: str, src_info: str) -> str:
 # --------------------------------------------------------------------------
 
 
-def formalize(netlist: dict, top: str, out_dir: Path, mode: str = "circuitm",
-              properties: list[dict] | None = None) -> FormalizeResult:
-    """Autoformalize a Yosys JSON netlist into Sparkle Lean 4 sources.
+def formalize(netlist: dict, top: str, out_dir: Path, mode: str = "signal",
+              properties: list[dict] | None = None,
+              sv_path: Path | None = None) -> FormalizeResult:
+    """Autoformalize a design into Sparkle Lean 4 sources.
 
     Args:
-        netlist: Parsed Yosys ``write_json`` output.
+        netlist: Parsed Yosys ``write_json`` output (always required; it
+            remains the robust circuitm fallback path).
         top: Name of the top module inside ``netlist["modules"]``.
         out_dir: Directory for the generated ``.lean`` files.
-        mode: ``"circuitm"`` (robust IR reconstruction) or ``"signal"``
-            (best-effort Signal DSL; silently falls back to circuitm).
+        mode: ``"signal"`` (default: idiomatic Signal DSL) or
+            ``"circuitm"`` (low-level IR reconstruction).  In signal mode
+            the PRIMARY path is a source-to-source translation of the
+            *behavioral* SystemVerilog via :mod:`sparkle_fv.translate`
+            (requires ``sv_path``); on translation failure or excessive
+            TODO density (>30%) it falls back to circuitm with a note.
+            Without ``sv_path``, signal mode uses the legacy best-effort
+            netlist renderer.
         properties: Optional list of property dicts with keys
             ``name``, ``kind`` ("safety"|"liveness"), ``expr_signal``
             (net name of a 1-bit always-1 signal) and ``src``.
             ``$assert`` cells are additionally auto-extracted.
+        sv_path: Path to the ORIGINAL behavioral SystemVerilog source
+            (enables the idiomatic Signal-DSL translation).
 
     Returns:
         A :class:`FormalizeResult` with paths, effective mode and stats.
@@ -1372,7 +1389,63 @@ def formalize(netlist: dict, top: str, out_dir: Path, mode: str = "circuitm",
     if top not in modules:
         raise ValueError(f"top module '{top}' not in netlist "
                          f"(available: {sorted(modules)})")
+
+    # PRIMARY path: the AI agent translates the behavioral SV directly to
+    # idiomatic Signal DSL (GLM-5.2, translate->validate->repair loop).
+    # Runs only when the LLM is configured; every candidate is validated
+    # against the Sparkle API and (where lake exists) compiled and
+    # equivalence-checked, so this path can only raise quality, never break
+    # soundness.
+    translate_note: str | None = None
+    if mode == "signal" and sv_path is not None:
+        try:
+            from . import ai_translate as _ai
+            ares = _ai.ai_translate(Path(sv_path), top, Path(out_dir))
+            if ares.ok and ares.lean_file is not None:
+                return FormalizeResult(
+                    top=top, lean_file=ares.lean_file, props_file=None,
+                    mode="signal",
+                    stats={"source": "ai_translate (GLM-5.2 agentic)",
+                           "attempts": ares.attempts,
+                           "validated": ares.validated,
+                           "notes": ares.notes})
+            if ares.notes:
+                translate_note = f"ai_translate fallback: {ares.notes[-1]}"
+        except Exception as exc:  # never block formalization
+            translate_note = f"ai_translate fallback: {type(exc).__name__}: {exc}"
+
+    # SECONDARY path: deterministic source-to-source Signal DSL translation
+    # of the behavioral SV (Verilator XML AST).  The netlist stays available
+    # for the circuitm fallback below.
+    if mode == "signal" and sv_path is not None:
+        try:
+            from . import translate as _translate
+            tres = _translate.translate(Path(sv_path), top, Path(out_dir))
+            n_units = max(1, tres.stats["registers"] + tres.stats["memories"]
+                          + tres.stats["combinational"]
+                          + tres.stats["asserts"])
+            density = len(tres.stats["todos"]) / n_units
+            if density <= 0.30:
+                stats = dict(tres.stats)
+                stats["notes"] = list(tres.notes)
+                stats["source"] = "translate (behavioral SV via Verilator XML)"
+                return FormalizeResult(top=top, lean_file=tres.lean_file,
+                                       props_file=tres.props_file,
+                                       mode="signal", stats=stats)
+            note = (f"signal translate fallback: TODO density "
+                    f"{density:.0%} > 30% "
+                    f"({len(tres.stats['todos'])} todos)")
+            translate_note = f"{translate_note}; {note}" if translate_note \
+                else note
+        except Exception as exc:  # never block formalization
+            note = f"signal translate fallback: {type(exc).__name__}: {exc}"
+            translate_note = f"{translate_note}; {note}" if translate_note \
+                else note
+        mode = "circuitm"
+
     d = _Design(top, modules[top], list(properties or []))
+    if translate_note:
+        d.notes.append(translate_note)
     d.build()
 
     out_dir = Path(out_dir)
@@ -1433,24 +1506,32 @@ def _main(argv: list[str]) -> int:
     parser.add_argument("--out", default=None,
                         help="output directory (default: alongside netlist)")
     parser.add_argument("--mode", choices=["circuitm", "signal"],
-                        default="circuitm")
+                        default="signal")
+    parser.add_argument("--sv", default=None,
+                        help="original behavioral SystemVerilog source "
+                             "(enables the idiomatic Signal-DSL translation)")
     args = parser.parse_args(argv)
 
     data = json.loads(Path(args.netlist).read_text())
     out_dir = Path(args.out) if args.out else Path(args.netlist).resolve().parent
-    res = formalize(data, args.top, out_dir, mode=args.mode)
+    res = formalize(data, args.top, out_dir, mode=args.mode,
+                    sv_path=Path(args.sv) if args.sv else None)
 
     print(f"top        : {res.top}")
     print(f"mode       : {res.mode}")
     print(f"lean_file  : {res.lean_file}")
     print(f"props_file : {res.props_file}")
-    for k in ("cells", "registers", "memories", "wires", "assigns"):
-        print(f"{k:11}: {res.stats[k]}")
-    if res.stats["unsupported"]:
+    for k in ("cells", "registers", "memories", "wires", "assigns",
+              "combinational", "asserts"):
+        if k in res.stats:
+            print(f"{k:11}: {res.stats[k]}")
+    if res.stats.get("unsupported"):
         print(f"unsupported: {res.stats['unsupported']}")
-    if res.stats["properties"]:
+    if res.stats.get("todos"):
+        print(f"todos      : {res.stats['todos']}")
+    if res.stats.get("properties"):
         print(f"properties : {res.stats['properties']}")
-    for note in res.stats["notes"]:
+    for note in res.stats.get("notes", []):
         print(f"note       : {note}")
     return 0
 

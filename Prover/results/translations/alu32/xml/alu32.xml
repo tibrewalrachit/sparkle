@@ -1,0 +1,591 @@
+<?xml version="1.0" ?>
+<!-- DESCRIPTION: Verilator output: XML representation of netlist -->
+<verilator_xml>
+  <files>
+    <file id="c" filename="/usr/share/verilator/include/verilated_std.sv" language="1800-2017"/>
+    <file id="a" filename="&lt;built-in&gt;" language="1800-2017"/>
+    <file id="b" filename="&lt;command-line&gt;" language="1800-2017"/>
+    <file id="d" filename="benchmarks/blocks/alu32/design.sv" language="1800-2017"/>
+  </files>
+  <module_files>
+    <file id="d" filename="benchmarks/blocks/alu32/design.sv" language="1800-2017"/>
+  </module_files>
+  <cells>
+    <cell loc="d,14,8,14,13" name="alu32" submodname="alu32" hier="alu32"/>
+  </cells>
+  <netlist>
+    <module loc="d,14,8,14,13" name="alu32" origName="alu32" topModule="1">
+      <var loc="d,15,18,15,21" name="clk" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk"/>
+      <var loc="d,16,18,16,21" name="rst" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="rst"/>
+      <var loc="d,17,25,17,26" name="a" dtype_id="2" dir="input" pinIndex="3" vartype="logic" origName="a"/>
+      <var loc="d,18,25,18,26" name="b" dtype_id="2" dir="input" pinIndex="4" vartype="logic" origName="b"/>
+      <var loc="d,19,25,19,27" name="op" dtype_id="3" dir="input" pinIndex="5" vartype="logic" origName="op"/>
+      <var loc="d,20,25,20,31" name="result" dtype_id="2" dir="output" pinIndex="6" vartype="logic" origName="result"/>
+      <var loc="d,22,28,22,34" name="OP_ADD" dtype_id="3" vartype="logic" origName="OP_ADD" localparam="true">
+        <const loc="d,22,38,22,42" name="3&apos;h0" dtype_id="3"/>
+      </var>
+      <var loc="d,23,28,23,34" name="OP_SUB" dtype_id="3" vartype="logic" origName="OP_SUB" localparam="true">
+        <const loc="d,23,38,23,42" name="3&apos;h1" dtype_id="3"/>
+      </var>
+      <var loc="d,24,28,24,34" name="OP_AND" dtype_id="3" vartype="logic" origName="OP_AND" localparam="true">
+        <const loc="d,24,38,24,42" name="3&apos;h2" dtype_id="3"/>
+      </var>
+      <var loc="d,25,28,25,33" name="OP_OR" dtype_id="3" vartype="logic" origName="OP_OR" localparam="true">
+        <const loc="d,25,38,25,42" name="3&apos;h3" dtype_id="3"/>
+      </var>
+      <var loc="d,26,28,26,34" name="OP_XOR" dtype_id="3" vartype="logic" origName="OP_XOR" localparam="true">
+        <const loc="d,26,38,26,42" name="3&apos;h4" dtype_id="3"/>
+      </var>
+      <var loc="d,27,28,27,34" name="OP_SLT" dtype_id="3" vartype="logic" origName="OP_SLT" localparam="true">
+        <const loc="d,27,38,27,42" name="3&apos;h5" dtype_id="3"/>
+      </var>
+      <var loc="d,28,28,28,35" name="OP_SLTU" dtype_id="3" vartype="logic" origName="OP_SLTU" localparam="true">
+        <const loc="d,28,38,28,42" name="3&apos;h6" dtype_id="3"/>
+      </var>
+      <var loc="d,29,28,29,34" name="OP_SLL" dtype_id="3" vartype="logic" origName="OP_SLL" localparam="true">
+        <const loc="d,29,38,29,42" name="3&apos;h7" dtype_id="3"/>
+      </var>
+      <var loc="d,31,18,31,21" name="a_q" dtype_id="2" vartype="logic" origName="a_q"/>
+      <initialstatic loc="d,31,25,31,30">
+        <assign loc="d,31,25,31,30" dtype_id="2">
+          <const loc="d,31,25,31,30" name="32&apos;h0" dtype_id="2"/>
+          <varref loc="d,31,25,31,30" name="a_q" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,32,18,32,21" name="b_q" dtype_id="2" vartype="logic" origName="b_q"/>
+      <initialstatic loc="d,32,25,32,30">
+        <assign loc="d,32,25,32,30" dtype_id="2">
+          <const loc="d,32,25,32,30" name="32&apos;h0" dtype_id="2"/>
+          <varref loc="d,32,25,32,30" name="b_q" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,33,18,33,22" name="op_q" dtype_id="3" vartype="logic" origName="op_q"/>
+      <initialstatic loc="d,33,25,33,29">
+        <assign loc="d,33,25,33,29" dtype_id="3">
+          <const loc="d,33,25,33,29" name="3&apos;h0" dtype_id="3"/>
+          <varref loc="d,33,25,33,29" name="op_q" dtype_id="3"/>
+        </assign>
+      </initialstatic>
+      <always loc="d,35,5,35,14">
+        <sentree loc="d,35,15,35,16">
+          <senitem loc="d,35,17,35,24" edgeType="POS">
+            <varref loc="d,35,25,35,28" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,35,30,35,35">
+          <if loc="d,36,9,36,11">
+            <varref loc="d,36,13,36,16" name="rst" dtype_id="1"/>
+            <begin>
+              <begin loc="d,36,18,36,23">
+                <assigndly loc="d,37,18,37,20" dtype_id="2">
+                  <const loc="d,37,21,37,26" name="32&apos;h0" dtype_id="2"/>
+                  <varref loc="d,37,13,37,16" name="a_q" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,38,18,38,20" dtype_id="2">
+                  <const loc="d,38,21,38,26" name="32&apos;h0" dtype_id="2"/>
+                  <varref loc="d,38,13,38,16" name="b_q" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,39,18,39,20" dtype_id="3">
+                  <const loc="d,39,21,39,25" name="3&apos;h0" dtype_id="3"/>
+                  <varref loc="d,39,13,39,17" name="op_q" dtype_id="3"/>
+                </assigndly>
+              </begin>
+            </begin>
+            <begin>
+              <begin loc="d,40,18,40,23">
+                <assigndly loc="d,41,18,41,20" dtype_id="2">
+                  <varref loc="d,41,21,41,22" name="a" dtype_id="2"/>
+                  <varref loc="d,41,13,41,16" name="a_q" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,42,18,42,20" dtype_id="2">
+                  <varref loc="d,42,21,42,22" name="b" dtype_id="2"/>
+                  <varref loc="d,42,13,42,16" name="b_q" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,43,18,43,20" dtype_id="3">
+                  <varref loc="d,43,21,43,23" name="op" dtype_id="3"/>
+                  <varref loc="d,43,13,43,17" name="op_q" dtype_id="3"/>
+                </assigndly>
+              </begin>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <var loc="d,47,18,47,21" name="res" dtype_id="2" vartype="logic" origName="res"/>
+      <always loc="d,48,5,48,16">
+        <begin loc="d,48,17,48,22">
+          <case loc="d,49,9,49,13">
+            <varref loc="d,49,15,49,19" name="op_q" dtype_id="3"/>
+            <caseitem loc="d,50,19,50,20">
+              <const loc="d,50,13,50,19" name="3&apos;h0" dtype_id="3"/>
+              <assign loc="d,50,26,50,27" dtype_id="2">
+                <add loc="d,50,32,50,33" dtype_id="2">
+                  <varref loc="d,50,28,50,31" name="a_q" dtype_id="2"/>
+                  <varref loc="d,50,34,50,37" name="b_q" dtype_id="2"/>
+                </add>
+                <varref loc="d,50,22,50,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+            <caseitem loc="d,51,19,51,20">
+              <const loc="d,51,13,51,19" name="3&apos;h1" dtype_id="3"/>
+              <assign loc="d,51,26,51,27" dtype_id="2">
+                <add loc="d,51,39,51,40" dtype_id="2">
+                  <const loc="d,51,41,51,46" name="32&apos;h1" dtype_id="2"/>
+                  <add loc="d,51,32,51,33" dtype_id="2">
+                    <varref loc="d,51,28,51,31" name="a_q" dtype_id="2"/>
+                    <not loc="d,51,34,51,35" dtype_id="2">
+                      <varref loc="d,51,35,51,38" name="b_q" dtype_id="2"/>
+                    </not>
+                  </add>
+                </add>
+                <varref loc="d,51,22,51,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+            <caseitem loc="d,52,19,52,20">
+              <const loc="d,52,13,52,19" name="3&apos;h2" dtype_id="3"/>
+              <assign loc="d,52,26,52,27" dtype_id="2">
+                <and loc="d,52,32,52,33" dtype_id="2">
+                  <varref loc="d,52,28,52,31" name="a_q" dtype_id="2"/>
+                  <varref loc="d,52,34,52,37" name="b_q" dtype_id="2"/>
+                </and>
+                <varref loc="d,52,22,52,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+            <caseitem loc="d,53,18,53,19">
+              <const loc="d,53,13,53,18" name="3&apos;h3" dtype_id="3"/>
+              <assign loc="d,53,26,53,27" dtype_id="2">
+                <or loc="d,53,32,53,33" dtype_id="2">
+                  <varref loc="d,53,28,53,31" name="a_q" dtype_id="2"/>
+                  <varref loc="d,53,34,53,37" name="b_q" dtype_id="2"/>
+                </or>
+                <varref loc="d,53,22,53,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+            <caseitem loc="d,54,19,54,20">
+              <const loc="d,54,13,54,19" name="3&apos;h4" dtype_id="3"/>
+              <assign loc="d,54,26,54,27" dtype_id="2">
+                <xor loc="d,54,32,54,33" dtype_id="2">
+                  <varref loc="d,54,28,54,31" name="a_q" dtype_id="2"/>
+                  <varref loc="d,54,34,54,37" name="b_q" dtype_id="2"/>
+                </xor>
+                <varref loc="d,54,22,54,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+            <caseitem loc="d,55,19,55,20">
+              <const loc="d,55,13,55,19" name="3&apos;h5" dtype_id="3"/>
+              <assign loc="d,55,26,55,27" dtype_id="2">
+                <cond loc="d,55,58,55,59" dtype_id="2">
+                  <lts loc="d,55,42,55,43" dtype_id="1">
+                    <varref loc="d,55,37,55,40" name="a_q" dtype_id="4"/>
+                    <varref loc="d,55,52,55,55" name="b_q" dtype_id="4"/>
+                  </lts>
+                  <const loc="d,55,60,55,65" name="32&apos;h1" dtype_id="2"/>
+                  <const loc="d,55,68,55,73" name="32&apos;h0" dtype_id="2"/>
+                </cond>
+                <varref loc="d,55,22,55,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+            <caseitem loc="d,56,20,56,21">
+              <const loc="d,56,13,56,20" name="3&apos;h6" dtype_id="3"/>
+              <assign loc="d,56,26,56,27" dtype_id="2">
+                <cond loc="d,56,40,56,41" dtype_id="2">
+                  <lt loc="d,56,33,56,34" dtype_id="1">
+                    <varref loc="d,56,29,56,32" name="a_q" dtype_id="2"/>
+                    <varref loc="d,56,35,56,38" name="b_q" dtype_id="2"/>
+                  </lt>
+                  <const loc="d,56,42,56,47" name="32&apos;h1" dtype_id="2"/>
+                  <const loc="d,56,50,56,55" name="32&apos;h0" dtype_id="2"/>
+                </cond>
+                <varref loc="d,56,22,56,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+            <caseitem loc="d,57,13,57,20">
+              <assign loc="d,57,26,57,27" dtype_id="2">
+                <shiftl loc="d,57,32,57,34" dtype_id="2">
+                  <varref loc="d,57,28,57,31" name="a_q" dtype_id="2"/>
+                  <sel loc="d,57,38,57,39" dtype_id="5">
+                    <varref loc="d,57,35,57,38" name="b_q" dtype_id="2"/>
+                    <const loc="d,57,41,57,42" name="5&apos;h0" dtype_id="6"/>
+                    <const loc="d,57,39,57,40" name="32&apos;h5" dtype_id="2"/>
+                  </sel>
+                </shiftl>
+                <varref loc="d,57,22,57,25" name="res" dtype_id="2"/>
+              </assign>
+            </caseitem>
+          </case>
+        </begin>
+      </always>
+      <always loc="d,66,5,66,11">
+        <sentree loc="d,66,12,66,13">
+          <senitem loc="d,66,14,66,21" edgeType="POS">
+            <varref loc="d,66,22,66,25" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,66,27,66,32">
+          <if loc="d,67,9,67,11">
+            <eq loc="d,67,18,67,20" dtype_id="1">
+              <const loc="d,67,21,67,27" name="3&apos;h1" dtype_id="3"/>
+              <varref loc="d,67,13,67,17" name="op_q" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,67,29,67,34">
+                <if loc="d,69,13,69,19">
+                  <cexpr loc="d,69,13,69,19" dtype_id="1">
+                    <text loc="d,69,13,69,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,69,13,69,19">
+                      <neq loc="d,69,39,69,41" dtype_id="1">
+                        <eq loc="d,69,29,69,31" dtype_id="1">
+                          <const loc="d,69,32,69,37" name="32&apos;h0" dtype_id="2"/>
+                          <varref loc="d,69,22,69,28" name="result" dtype_id="2"/>
+                        </eq>
+                        <eq loc="d,69,47,69,49" dtype_id="1">
+                          <varref loc="d,69,43,69,46" name="a_q" dtype_id="2"/>
+                          <varref loc="d,69,50,69,53" name="b_q" dtype_id="2"/>
+                        </eq>
+                      </neq>
+                      <begin>
+                        <display loc="d,69,13,69,19" displaytype="$write">
+                          <sformatf loc="d,69,13,69,19" name="[%0t] %%Error: design.sv:69: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                            <time loc="d,69,13,69,19" dtype_id="8"/>
+                            <scopename loc="d,69,13,69,19" dtype_id="8"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,69,13,69,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <if loc="d,71,9,71,11">
+            <eq loc="d,71,18,71,20" dtype_id="1">
+              <const loc="d,71,21,71,27" name="3&apos;h2" dtype_id="3"/>
+              <varref loc="d,71,13,71,17" name="op_q" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,71,29,71,34">
+                <if loc="d,73,13,73,19">
+                  <cexpr loc="d,73,13,73,19" dtype_id="1">
+                    <text loc="d,73,13,73,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,73,13,73,19">
+                      <neq loc="d,73,37,73,39" dtype_id="1">
+                        <const loc="d,73,40,73,45" name="32&apos;h0" dtype_id="2"/>
+                        <and loc="d,73,29,73,30" dtype_id="2">
+                          <varref loc="d,73,22,73,28" name="result" dtype_id="2"/>
+                          <not loc="d,73,31,73,32" dtype_id="2">
+                            <varref loc="d,73,32,73,35" name="a_q" dtype_id="2"/>
+                          </not>
+                        </and>
+                      </neq>
+                      <begin>
+                        <display loc="d,73,13,73,19" displaytype="$write">
+                          <sformatf loc="d,73,13,73,19" name="[%0t] %%Error: design.sv:73: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                            <time loc="d,73,13,73,19" dtype_id="8"/>
+                            <scopename loc="d,73,13,73,19" dtype_id="8"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,73,13,73,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+                <if loc="d,74,13,74,19">
+                  <cexpr loc="d,74,13,74,19" dtype_id="1">
+                    <text loc="d,74,13,74,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,74,13,74,19">
+                      <neq loc="d,74,37,74,39" dtype_id="1">
+                        <const loc="d,74,40,74,45" name="32&apos;h0" dtype_id="2"/>
+                        <and loc="d,74,29,74,30" dtype_id="2">
+                          <varref loc="d,74,22,74,28" name="result" dtype_id="2"/>
+                          <not loc="d,74,31,74,32" dtype_id="2">
+                            <varref loc="d,74,32,74,35" name="b_q" dtype_id="2"/>
+                          </not>
+                        </and>
+                      </neq>
+                      <begin>
+                        <display loc="d,74,13,74,19" displaytype="$write">
+                          <sformatf loc="d,74,13,74,19" name="[%0t] %%Error: design.sv:74: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                            <time loc="d,74,13,74,19" dtype_id="8"/>
+                            <scopename loc="d,74,13,74,19" dtype_id="8"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,74,13,74,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <if loc="d,76,9,76,11">
+            <eq loc="d,76,18,76,20" dtype_id="1">
+              <const loc="d,76,21,76,26" name="3&apos;h3" dtype_id="3"/>
+              <varref loc="d,76,13,76,17" name="op_q" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,76,28,76,33">
+                <if loc="d,78,13,78,19">
+                  <cexpr loc="d,78,13,78,19" dtype_id="1">
+                    <text loc="d,78,13,78,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,78,13,78,19">
+                      <neq loc="d,78,36,78,38" dtype_id="1">
+                        <and loc="d,78,29,78,30" dtype_id="2">
+                          <varref loc="d,78,22,78,28" name="result" dtype_id="2"/>
+                          <varref loc="d,78,31,78,34" name="a_q" dtype_id="2"/>
+                        </and>
+                        <varref loc="d,78,39,78,42" name="a_q" dtype_id="2"/>
+                      </neq>
+                      <begin>
+                        <display loc="d,78,13,78,19" displaytype="$write">
+                          <sformatf loc="d,78,13,78,19" name="[%0t] %%Error: design.sv:78: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                            <time loc="d,78,13,78,19" dtype_id="8"/>
+                            <scopename loc="d,78,13,78,19" dtype_id="8"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,78,13,78,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+                <if loc="d,79,13,79,19">
+                  <cexpr loc="d,79,13,79,19" dtype_id="1">
+                    <text loc="d,79,13,79,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,79,13,79,19">
+                      <neq loc="d,79,36,79,38" dtype_id="1">
+                        <and loc="d,79,29,79,30" dtype_id="2">
+                          <varref loc="d,79,22,79,28" name="result" dtype_id="2"/>
+                          <varref loc="d,79,31,79,34" name="b_q" dtype_id="2"/>
+                        </and>
+                        <varref loc="d,79,39,79,42" name="b_q" dtype_id="2"/>
+                      </neq>
+                      <begin>
+                        <display loc="d,79,13,79,19" displaytype="$write">
+                          <sformatf loc="d,79,13,79,19" name="[%0t] %%Error: design.sv:79: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                            <time loc="d,79,13,79,19" dtype_id="8"/>
+                            <scopename loc="d,79,13,79,19" dtype_id="8"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,79,13,79,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <if loc="d,81,9,81,11">
+            <eq loc="d,81,18,81,20" dtype_id="1">
+              <const loc="d,81,21,81,27" name="3&apos;h4" dtype_id="3"/>
+              <varref loc="d,81,13,81,17" name="op_q" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,81,29,81,34">
+                <if loc="d,82,13,82,15">
+                  <eq loc="d,82,21,82,23" dtype_id="1">
+                    <varref loc="d,82,17,82,20" name="a_q" dtype_id="2"/>
+                    <varref loc="d,82,24,82,27" name="b_q" dtype_id="2"/>
+                  </eq>
+                  <begin>
+                    <if loc="d,82,29,82,35">
+                      <cexpr loc="d,82,29,82,35" dtype_id="1">
+                        <text loc="d,82,29,82,35"/>
+                      </cexpr>
+                      <begin>
+                        <if loc="d,82,29,82,35">
+                          <neq loc="d,82,44,82,46" dtype_id="1">
+                            <const loc="d,82,47,82,52" name="32&apos;h0" dtype_id="2"/>
+                            <varref loc="d,82,37,82,43" name="result" dtype_id="2"/>
+                          </neq>
+                          <begin>
+                            <display loc="d,82,29,82,35" displaytype="$write">
+                              <sformatf loc="d,82,29,82,35" name="[%0t] %%Error: design.sv:82: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                                <time loc="d,82,29,82,35" dtype_id="8"/>
+                                <scopename loc="d,82,29,82,35" dtype_id="8"/>
+                              </sformatf>
+                            </display>
+                            <stop loc="d,82,29,82,35"/>
+                          </begin>
+                        </if>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <if loc="d,84,9,84,11">
+            <eq loc="d,84,18,84,20" dtype_id="1">
+              <const loc="d,84,21,84,27" name="3&apos;h5" dtype_id="3"/>
+              <varref loc="d,84,13,84,17" name="op_q" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,84,29,84,34">
+                <if loc="d,85,13,85,15">
+                  <eq loc="d,85,21,85,23" dtype_id="1">
+                    <varref loc="d,85,17,85,20" name="a_q" dtype_id="2"/>
+                    <varref loc="d,85,24,85,27" name="b_q" dtype_id="2"/>
+                  </eq>
+                  <begin>
+                    <if loc="d,85,29,85,35">
+                      <cexpr loc="d,85,29,85,35" dtype_id="1">
+                        <text loc="d,85,29,85,35"/>
+                      </cexpr>
+                      <begin>
+                        <if loc="d,85,29,85,35">
+                          <neq loc="d,85,44,85,46" dtype_id="1">
+                            <const loc="d,85,47,85,52" name="32&apos;h0" dtype_id="2"/>
+                            <varref loc="d,85,37,85,43" name="result" dtype_id="2"/>
+                          </neq>
+                          <begin>
+                            <display loc="d,85,29,85,35" displaytype="$write">
+                              <sformatf loc="d,85,29,85,35" name="[%0t] %%Error: design.sv:85: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                                <time loc="d,85,29,85,35" dtype_id="8"/>
+                                <scopename loc="d,85,29,85,35" dtype_id="8"/>
+                              </sformatf>
+                            </display>
+                            <stop loc="d,85,29,85,35"/>
+                          </begin>
+                        </if>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <if loc="d,87,9,87,11">
+            <eq loc="d,87,18,87,20" dtype_id="1">
+              <const loc="d,87,21,87,28" name="3&apos;h6" dtype_id="3"/>
+              <varref loc="d,87,13,87,17" name="op_q" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,87,30,87,35">
+                <if loc="d,88,13,88,19">
+                  <cexpr loc="d,88,13,88,19" dtype_id="1">
+                    <text loc="d,88,13,88,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,88,13,88,19">
+                      <lt loc="d,88,28,88,30" dtype_id="1">
+                        <const loc="d,88,31,88,36" name="32&apos;h1" dtype_id="2"/>
+                        <varref loc="d,88,21,88,27" name="result" dtype_id="2"/>
+                      </lt>
+                      <begin>
+                        <display loc="d,88,13,88,19" displaytype="$write">
+                          <sformatf loc="d,88,13,88,19" name="[%0t] %%Error: design.sv:88: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                            <time loc="d,88,13,88,19" dtype_id="8"/>
+                            <scopename loc="d,88,13,88,19" dtype_id="8"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,88,13,88,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+                <if loc="d,89,13,89,15">
+                  <eq loc="d,89,21,89,23" dtype_id="1">
+                    <varref loc="d,89,17,89,20" name="a_q" dtype_id="2"/>
+                    <varref loc="d,89,24,89,27" name="b_q" dtype_id="2"/>
+                  </eq>
+                  <begin>
+                    <if loc="d,89,29,89,35">
+                      <cexpr loc="d,89,29,89,35" dtype_id="1">
+                        <text loc="d,89,29,89,35"/>
+                      </cexpr>
+                      <begin>
+                        <if loc="d,89,29,89,35">
+                          <neq loc="d,89,44,89,46" dtype_id="1">
+                            <const loc="d,89,47,89,52" name="32&apos;h0" dtype_id="2"/>
+                            <varref loc="d,89,37,89,43" name="result" dtype_id="2"/>
+                          </neq>
+                          <begin>
+                            <display loc="d,89,29,89,35" displaytype="$write">
+                              <sformatf loc="d,89,29,89,35" name="[%0t] %%Error: design.sv:89: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                                <time loc="d,89,29,89,35" dtype_id="8"/>
+                                <scopename loc="d,89,29,89,35" dtype_id="8"/>
+                              </sformatf>
+                            </display>
+                            <stop loc="d,89,29,89,35"/>
+                          </begin>
+                        </if>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <if loc="d,91,9,91,11">
+            <eq loc="d,91,18,91,20" dtype_id="1">
+              <const loc="d,91,21,91,27" name="3&apos;h7" dtype_id="3"/>
+              <varref loc="d,91,13,91,17" name="op_q" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,91,29,91,34">
+                <if loc="d,92,13,92,15">
+                  <eq loc="d,92,26,92,28" dtype_id="1">
+                    <const loc="d,92,29,92,33" name="5&apos;h0" dtype_id="5"/>
+                    <sel loc="d,92,20,92,21" dtype_id="5">
+                      <varref loc="d,92,17,92,20" name="b_q" dtype_id="2"/>
+                      <const loc="d,92,23,92,24" name="5&apos;h0" dtype_id="6"/>
+                      <const loc="d,92,21,92,22" name="32&apos;h5" dtype_id="2"/>
+                    </sel>
+                  </eq>
+                  <begin>
+                    <if loc="d,92,35,92,41">
+                      <cexpr loc="d,92,35,92,41" dtype_id="1">
+                        <text loc="d,92,35,92,41"/>
+                      </cexpr>
+                      <begin>
+                        <if loc="d,92,35,92,41">
+                          <neq loc="d,92,50,92,52" dtype_id="1">
+                            <varref loc="d,92,43,92,49" name="result" dtype_id="2"/>
+                            <varref loc="d,92,53,92,56" name="a_q" dtype_id="2"/>
+                          </neq>
+                          <begin>
+                            <display loc="d,92,35,92,41" displaytype="$write">
+                              <sformatf loc="d,92,35,92,41" name="[%0t] %%Error: design.sv:92: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="7">
+                                <time loc="d,92,35,92,41" dtype_id="8"/>
+                                <scopename loc="d,92,35,92,41" dtype_id="8"/>
+                              </sformatf>
+                            </display>
+                            <stop loc="d,92,35,92,41"/>
+                          </begin>
+                        </if>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <contassign loc="d,61,19,61,20" dtype_id="2">
+        <varref loc="d,47,18,47,21" name="res" dtype_id="2"/>
+        <varref loc="d,20,25,20,31" name="result" dtype_id="2"/>
+      </contassign>
+    </module>
+    <typetable loc="a,0,0,0,0">
+      <voiddtype loc="c,51,21,51,30" id="9"/>
+      <basicdtype loc="d,92,29,92,33" id="5" name="logic" left="4" right="0"/>
+      <basicdtype loc="d,15,12,15,17" id="1" name="logic"/>
+      <basicdtype loc="d,17,12,17,17" id="2" name="logic" left="31" right="0"/>
+      <basicdtype loc="d,19,12,19,17" id="3" name="logic" left="2" right="0"/>
+      <basicdtype loc="d,55,29,55,36" id="4" name="logic" left="31" right="0" signed="true"/>
+      <basicdtype loc="d,57,38,57,39" id="6" name="logic" left="4" right="0" signed="true"/>
+      <basicdtype loc="d,69,13,69,19" id="7" name="string"/>
+      <basicdtype loc="d,69,13,69,19" id="8" name="QData" left="63" right="0"/>
+    </typetable>
+  </netlist>
+</verilator_xml>

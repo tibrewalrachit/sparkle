@@ -1,0 +1,404 @@
+<?xml version="1.0" ?>
+<!-- DESCRIPTION: Verilator output: XML representation of netlist -->
+<verilator_xml>
+  <files>
+    <file id="c" filename="/usr/share/verilator/include/verilated_std.sv" language="1800-2017"/>
+    <file id="a" filename="&lt;built-in&gt;" language="1800-2017"/>
+    <file id="b" filename="&lt;command-line&gt;" language="1800-2017"/>
+    <file id="d" filename="benchmarks/blocks/axi_lite_slave/design.sv" language="1800-2017"/>
+  </files>
+  <module_files>
+    <file id="d" filename="benchmarks/blocks/axi_lite_slave/design.sv" language="1800-2017"/>
+  </module_files>
+  <cells>
+    <cell loc="d,12,8,12,22" name="axi_lite_slave" submodname="axi_lite_slave" hier="axi_lite_slave"/>
+  </cells>
+  <netlist>
+    <module loc="d,12,8,12,22" name="axi_lite_slave" origName="axi_lite_slave" topModule="1">
+      <var loc="d,13,18,13,21" name="clk" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk"/>
+      <var loc="d,14,18,14,21" name="rst" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="rst"/>
+      <var loc="d,16,25,16,32" name="awvalid" dtype_id="1" dir="input" pinIndex="3" vartype="logic" origName="awvalid"/>
+      <var loc="d,17,25,17,32" name="awready" dtype_id="1" dir="output" pinIndex="4" vartype="logic" origName="awready"/>
+      <var loc="d,18,25,18,31" name="awaddr" dtype_id="2" dir="input" pinIndex="5" vartype="logic" origName="awaddr"/>
+      <var loc="d,20,25,20,31" name="wvalid" dtype_id="1" dir="input" pinIndex="6" vartype="logic" origName="wvalid"/>
+      <var loc="d,21,25,21,31" name="wready" dtype_id="1" dir="output" pinIndex="7" vartype="logic" origName="wready"/>
+      <var loc="d,22,25,22,30" name="wdata" dtype_id="3" dir="input" pinIndex="8" vartype="logic" origName="wdata"/>
+      <var loc="d,24,25,24,31" name="bvalid" dtype_id="1" dir="output" pinIndex="9" vartype="logic" origName="bvalid"/>
+      <var loc="d,25,25,25,31" name="bready" dtype_id="1" dir="input" pinIndex="10" vartype="logic" origName="bready"/>
+      <var loc="d,27,18,27,22" name="regs" dtype_id="4" vartype="" origName="regs"/>
+      <var loc="d,29,18,29,25" name="aw_done" dtype_id="1" vartype="logic" origName="aw_done"/>
+      <initialstatic loc="d,29,29,29,33">
+        <assign loc="d,29,29,29,33" dtype_id="1">
+          <const loc="d,29,29,29,33" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,29,29,29,33" name="aw_done" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,30,18,30,24" name="w_done" dtype_id="1" vartype="logic" origName="w_done"/>
+      <initialstatic loc="d,30,29,30,33">
+        <assign loc="d,30,29,30,33" dtype_id="1">
+          <const loc="d,30,29,30,33" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,30,29,30,33" name="w_done" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,31,18,31,26" name="awaddr_q" dtype_id="2" vartype="logic" origName="awaddr_q"/>
+      <initialstatic loc="d,31,29,31,33">
+        <assign loc="d,31,29,31,33" dtype_id="2">
+          <const loc="d,31,29,31,33" name="4&apos;h0" dtype_id="2"/>
+          <varref loc="d,31,29,31,33" name="awaddr_q" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,32,18,32,25" name="wdata_q" dtype_id="3" vartype="logic" origName="wdata_q"/>
+      <initialstatic loc="d,32,29,32,34">
+        <assign loc="d,32,29,32,34" dtype_id="3">
+          <const loc="d,32,29,32,34" name="32&apos;h0" dtype_id="3"/>
+          <varref loc="d,32,29,32,34" name="wdata_q" dtype_id="3"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,33,18,33,26" name="bvalid_q" dtype_id="1" vartype="logic" origName="bvalid_q"/>
+      <initialstatic loc="d,33,29,33,33">
+        <assign loc="d,33,29,33,33" dtype_id="1">
+          <const loc="d,33,29,33,33" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,33,29,33,33" name="bvalid_q" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,39,10,39,17" name="aw_fire" dtype_id="1" vartype="logic" origName="aw_fire"/>
+      <var loc="d,40,10,40,16" name="w_fire" dtype_id="1" vartype="logic" origName="w_fire"/>
+      <var loc="d,41,10,41,19" name="both_done" dtype_id="1" vartype="logic" origName="both_done"/>
+      <always loc="d,43,5,43,14">
+        <sentree loc="d,43,15,43,16">
+          <senitem loc="d,43,17,43,24" edgeType="POS">
+            <varref loc="d,43,25,43,28" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,43,30,43,35">
+          <if loc="d,44,9,44,11">
+            <varref loc="d,44,13,44,16" name="rst" dtype_id="1"/>
+            <begin>
+              <begin loc="d,44,18,44,23">
+                <assigndly loc="d,45,22,45,24" dtype_id="1">
+                  <const loc="d,45,25,45,29" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="d,45,13,45,20" name="aw_done" dtype_id="1"/>
+                </assigndly>
+                <assigndly loc="d,46,22,46,24" dtype_id="1">
+                  <const loc="d,46,25,46,29" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="d,46,13,46,19" name="w_done" dtype_id="1"/>
+                </assigndly>
+                <assigndly loc="d,47,22,47,24" dtype_id="1">
+                  <const loc="d,47,25,47,29" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="d,47,13,47,21" name="bvalid_q" dtype_id="1"/>
+                </assigndly>
+              </begin>
+            </begin>
+            <begin>
+              <begin loc="d,48,18,48,23">
+                <if loc="d,49,13,49,15">
+                  <varref loc="d,49,17,49,24" name="aw_fire" dtype_id="1"/>
+                  <begin>
+                    <begin loc="d,49,26,49,31">
+                      <assigndly loc="d,50,26,50,28" dtype_id="2">
+                        <varref loc="d,50,29,50,35" name="awaddr" dtype_id="2"/>
+                        <varref loc="d,50,17,50,25" name="awaddr_q" dtype_id="2"/>
+                      </assigndly>
+                      <assigndly loc="d,51,26,51,28" dtype_id="1">
+                        <const loc="d,51,29,51,33" name="1&apos;h1" dtype_id="1"/>
+                        <varref loc="d,51,17,51,24" name="aw_done" dtype_id="1"/>
+                      </assigndly>
+                    </begin>
+                  </begin>
+                </if>
+                <if loc="d,53,13,53,15">
+                  <varref loc="d,53,17,53,23" name="w_fire" dtype_id="1"/>
+                  <begin>
+                    <begin loc="d,53,25,53,30">
+                      <assigndly loc="d,54,25,54,27" dtype_id="3">
+                        <varref loc="d,54,28,54,33" name="wdata" dtype_id="3"/>
+                        <varref loc="d,54,17,54,24" name="wdata_q" dtype_id="3"/>
+                      </assigndly>
+                      <assigndly loc="d,55,25,55,27" dtype_id="1">
+                        <const loc="d,55,28,55,32" name="1&apos;h1" dtype_id="1"/>
+                        <varref loc="d,55,17,55,23" name="w_done" dtype_id="1"/>
+                      </assigndly>
+                    </begin>
+                  </begin>
+                </if>
+                <if loc="d,57,13,57,15">
+                  <and loc="d,57,27,57,29" dtype_id="1">
+                    <not loc="d,57,17,57,18" dtype_id="1">
+                      <varref loc="d,57,18,57,26" name="bvalid_q" dtype_id="1"/>
+                    </not>
+                    <varref loc="d,57,30,57,39" name="both_done" dtype_id="1"/>
+                  </and>
+                  <begin>
+                    <begin loc="d,57,41,57,46">
+                      <assigndly loc="d,59,51,59,53" dtype_id="3">
+                        <cond loc="d,59,61,59,62" dtype_id="3">
+                          <varref loc="d,59,54,59,60" name="w_fire" dtype_id="1"/>
+                          <varref loc="d,59,63,59,68" name="wdata" dtype_id="3"/>
+                          <varref loc="d,59,71,59,78" name="wdata_q" dtype_id="3"/>
+                        </cond>
+                        <arraysel loc="d,59,21,59,22" dtype_id="3">
+                          <varref loc="d,59,17,59,21" name="regs" dtype_id="4"/>
+                          <cond loc="d,59,30,59,31" dtype_id="2">
+                            <varref loc="d,59,22,59,29" name="aw_fire" dtype_id="1"/>
+                            <varref loc="d,59,32,59,38" name="awaddr" dtype_id="2"/>
+                            <varref loc="d,59,41,59,49" name="awaddr_q" dtype_id="2"/>
+                          </cond>
+                        </arraysel>
+                      </assigndly>
+                      <assigndly loc="d,60,26,60,28" dtype_id="1">
+                        <const loc="d,60,29,60,33" name="1&apos;h1" dtype_id="1"/>
+                        <varref loc="d,60,17,60,25" name="bvalid_q" dtype_id="1"/>
+                      </assigndly>
+                    </begin>
+                  </begin>
+                  <begin>
+                    <if loc="d,61,22,61,24">
+                      <and loc="d,61,35,61,37" dtype_id="1">
+                        <varref loc="d,61,26,61,34" name="bvalid_q" dtype_id="1"/>
+                        <varref loc="d,61,38,61,44" name="bready" dtype_id="1"/>
+                      </and>
+                      <begin>
+                        <begin loc="d,61,46,61,51">
+                          <assigndly loc="d,62,26,62,28" dtype_id="1">
+                            <const loc="d,62,29,62,33" name="1&apos;h0" dtype_id="1"/>
+                            <varref loc="d,62,17,62,25" name="bvalid_q" dtype_id="1"/>
+                          </assigndly>
+                          <assigndly loc="d,63,26,63,28" dtype_id="1">
+                            <const loc="d,63,29,63,33" name="1&apos;h0" dtype_id="1"/>
+                            <varref loc="d,63,17,63,24" name="aw_done" dtype_id="1"/>
+                          </assigndly>
+                          <assigndly loc="d,64,26,64,28" dtype_id="1">
+                            <const loc="d,64,29,64,33" name="1&apos;h0" dtype_id="1"/>
+                            <varref loc="d,64,17,64,23" name="w_done" dtype_id="1"/>
+                          </assigndly>
+                        </begin>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <var loc="d,70,11,70,19" name="bvalid_p" dtype_id="1" vartype="logic" origName="bvalid_p"/>
+      <initialstatic loc="d,70,22,70,26">
+        <assign loc="d,70,22,70,26" dtype_id="1">
+          <const loc="d,70,22,70,26" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,70,22,70,26" name="bvalid_p" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,71,11,71,19" name="bready_p" dtype_id="1" vartype="logic" origName="bready_p"/>
+      <initialstatic loc="d,71,22,71,26">
+        <assign loc="d,71,22,71,26" dtype_id="1">
+          <const loc="d,71,22,71,26" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,71,22,71,26" name="bready_p" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,72,11,72,18" name="prev_ok" dtype_id="1" vartype="logic" origName="prev_ok"/>
+      <initialstatic loc="d,72,22,72,26">
+        <assign loc="d,72,22,72,26" dtype_id="1">
+          <const loc="d,72,22,72,26" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,72,22,72,26" name="prev_ok" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <always loc="d,73,5,73,14">
+        <sentree loc="d,73,15,73,16">
+          <senitem loc="d,73,17,73,24" edgeType="POS">
+            <varref loc="d,73,25,73,28" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,73,30,73,35">
+          <assigndly loc="d,75,21,75,23" dtype_id="1">
+            <not loc="d,75,24,75,28" dtype_id="1">
+              <varref loc="d,74,13,74,16" name="rst" dtype_id="1"/>
+            </not>
+            <varref loc="d,75,13,75,20" name="prev_ok" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,78,18,78,20" dtype_id="1">
+            <varref loc="d,78,21,78,27" name="bvalid" dtype_id="1"/>
+            <varref loc="d,78,9,78,17" name="bvalid_p" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,79,18,79,20" dtype_id="1">
+            <varref loc="d,79,21,79,27" name="bready" dtype_id="1"/>
+            <varref loc="d,79,9,79,17" name="bready_p" dtype_id="1"/>
+          </assigndly>
+        </begin>
+      </always>
+      <always loc="d,85,5,85,11">
+        <sentree loc="d,85,12,85,13">
+          <senitem loc="d,85,14,85,21" edgeType="POS">
+            <varref loc="d,85,22,85,25" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,85,27,85,32">
+          <if loc="d,87,9,87,11">
+            <varref loc="d,87,13,87,19" name="bvalid" dtype_id="1"/>
+            <begin>
+              <if loc="d,88,13,88,19">
+                <cexpr loc="d,88,13,88,19" dtype_id="1">
+                  <text loc="d,88,13,88,19"/>
+                </cexpr>
+                <begin>
+                  <if loc="d,88,13,88,19">
+                    <not loc="d,88,29,88,31" dtype_id="1">
+                      <and loc="d,88,29,88,31" dtype_id="1">
+                        <varref loc="d,88,21,88,28" name="aw_done" dtype_id="1"/>
+                        <varref loc="d,88,32,88,38" name="w_done" dtype_id="1"/>
+                      </and>
+                    </not>
+                    <begin>
+                      <display loc="d,88,13,88,19" displaytype="$write">
+                        <sformatf loc="d,88,13,88,19" name="[%0t] %%Error: design.sv:88: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="5">
+                          <time loc="d,88,13,88,19" dtype_id="6"/>
+                          <scopename loc="d,88,13,88,19" dtype_id="6"/>
+                        </sformatf>
+                      </display>
+                      <stop loc="d,88,13,88,19"/>
+                    </begin>
+                  </if>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,90,9,90,11">
+            <and loc="d,90,41,90,43" dtype_id="1">
+              <and loc="d,90,29,90,31" dtype_id="1">
+                <and loc="d,90,21,90,23" dtype_id="1">
+                  <varref loc="d,90,13,90,20" name="prev_ok" dtype_id="1"/>
+                  <not loc="d,90,24,90,25" dtype_id="1">
+                    <varref loc="d,90,25,90,28" name="rst" dtype_id="1"/>
+                  </not>
+                </and>
+                <varref loc="d,90,32,90,40" name="bvalid_p" dtype_id="1"/>
+              </and>
+              <not loc="d,90,44,90,45" dtype_id="1">
+                <varref loc="d,90,45,90,53" name="bready_p" dtype_id="1"/>
+              </not>
+            </and>
+            <begin>
+              <if loc="d,91,13,91,19">
+                <cexpr loc="d,91,13,91,19" dtype_id="1">
+                  <text loc="d,91,13,91,19"/>
+                </cexpr>
+                <begin>
+                  <if loc="d,91,13,91,19">
+                    <not loc="d,91,21,91,27" dtype_id="1">
+                      <varref loc="d,91,21,91,27" name="bvalid" dtype_id="1"/>
+                    </not>
+                    <begin>
+                      <display loc="d,91,13,91,19" displaytype="$write">
+                        <sformatf loc="d,91,13,91,19" name="[%0t] %%Error: design.sv:91: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="5">
+                          <time loc="d,91,13,91,19" dtype_id="6"/>
+                          <scopename loc="d,91,13,91,19" dtype_id="6"/>
+                        </sformatf>
+                      </display>
+                      <stop loc="d,91,13,91,19"/>
+                    </begin>
+                  </if>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,93,9,93,15">
+            <cexpr loc="d,93,9,93,15" dtype_id="1">
+              <text loc="d,93,9,93,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,93,9,93,15">
+                <and loc="d,93,26,93,28" dtype_id="1">
+                  <varref loc="d,93,19,93,25" name="bvalid" dtype_id="1"/>
+                  <or loc="d,93,38,93,40" dtype_id="1">
+                    <varref loc="d,93,30,93,37" name="awready" dtype_id="1"/>
+                    <varref loc="d,93,41,93,47" name="wready" dtype_id="1"/>
+                  </or>
+                </and>
+                <begin>
+                  <display loc="d,93,9,93,15" displaytype="$write">
+                    <sformatf loc="d,93,9,93,15" name="[%0t] %%Error: design.sv:93: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="5">
+                      <time loc="d,93,9,93,15" dtype_id="6"/>
+                      <scopename loc="d,93,9,93,15" dtype_id="6"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,93,9,93,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <var loc="d,35,34,35,35" name="__VdfgTmp_hab165a67__0" dtype_id="7" vartype="bit" origName="__VdfgTmp_hab165a67__0"/>
+      <contassign loc="d,35,20,35,21" dtype_id="1">
+        <and loc="d,35,31,35,33" dtype_id="1">
+          <not loc="d,35,22,35,23" dtype_id="1">
+            <varref loc="d,29,18,29,25" name="aw_done" dtype_id="1"/>
+          </not>
+          <varref loc="d,35,34,35,35" name="__VdfgTmp_hab165a67__0" dtype_id="7"/>
+        </and>
+        <varref loc="d,17,25,17,32" name="awready" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,36,20,36,21" dtype_id="1">
+        <and loc="d,36,31,36,33" dtype_id="1">
+          <not loc="d,36,22,36,23" dtype_id="1">
+            <varref loc="d,30,18,30,24" name="w_done" dtype_id="1"/>
+          </not>
+          <varref loc="d,35,34,35,35" name="__VdfgTmp_hab165a67__0" dtype_id="7"/>
+        </and>
+        <varref loc="d,21,25,21,31" name="wready" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,37,20,37,21" dtype_id="1">
+        <varref loc="d,33,18,33,26" name="bvalid_q" dtype_id="1"/>
+        <varref loc="d,24,25,24,31" name="bvalid" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,39,18,39,19" dtype_id="1">
+        <and loc="d,39,28,39,30" dtype_id="1">
+          <varref loc="d,16,25,16,32" name="awvalid" dtype_id="1"/>
+          <varref loc="d,35,31,35,33" name="awready" dtype_id="1"/>
+        </and>
+        <varref loc="d,39,10,39,17" name="aw_fire" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,40,18,40,19" dtype_id="1">
+        <and loc="d,40,28,40,30" dtype_id="1">
+          <varref loc="d,20,25,20,31" name="wvalid" dtype_id="1"/>
+          <varref loc="d,36,31,36,33" name="wready" dtype_id="1"/>
+        </and>
+        <varref loc="d,40,10,40,16" name="w_fire" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,41,20,41,21" dtype_id="1">
+        <and loc="d,41,43,41,45" dtype_id="1">
+          <or loc="d,41,31,41,33" dtype_id="1">
+            <varref loc="d,29,18,29,25" name="aw_done" dtype_id="1"/>
+            <varref loc="d,39,28,39,30" name="aw_fire" dtype_id="1"/>
+          </or>
+          <or loc="d,41,54,41,56" dtype_id="1">
+            <varref loc="d,30,18,30,24" name="w_done" dtype_id="1"/>
+            <varref loc="d,40,28,40,30" name="w_fire" dtype_id="1"/>
+          </or>
+        </and>
+        <varref loc="d,41,10,41,19" name="both_done" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,35,34,35,35" dtype_id="7">
+        <not loc="d,35,34,35,35" dtype_id="1">
+          <varref loc="d,33,18,33,26" name="bvalid_q" dtype_id="1"/>
+        </not>
+        <varref loc="d,35,34,35,35" name="__VdfgTmp_hab165a67__0" dtype_id="7"/>
+      </contassign>
+    </module>
+    <typetable loc="a,0,0,0,0">
+      <voiddtype loc="c,51,21,51,30" id="8"/>
+      <basicdtype loc="d,13,12,13,17" id="1" name="logic"/>
+      <basicdtype loc="d,18,12,18,17" id="2" name="logic" left="3" right="0"/>
+      <basicdtype loc="d,22,12,22,17" id="3" name="logic" left="31" right="0"/>
+      <unpackarraydtype loc="d,27,23,27,24" id="4" sub_dtype_id="3">
+        <range loc="d,27,23,27,24">
+          <const loc="d,27,24,27,25" name="32&apos;sh0" dtype_id="9"/>
+          <const loc="d,27,26,27,28" name="32&apos;shf" dtype_id="9"/>
+        </range>
+      </unpackarraydtype>
+      <basicdtype loc="d,27,24,27,25" id="9" name="logic" left="31" right="0" signed="true"/>
+      <basicdtype loc="d,88,13,88,19" id="5" name="string"/>
+      <basicdtype loc="d,88,13,88,19" id="6" name="QData" left="63" right="0"/>
+      <basicdtype loc="a,0,0,0,0" id="7" name="bit"/>
+    </typetable>
+  </netlist>
+</verilator_xml>

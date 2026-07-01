@@ -21,7 +21,7 @@ def _cmd_formalize(args) -> int:
     out = Path(args.out)
     comp = frontend.compile_sv(args.design, args.top, out)
     res = formalize(frontend.load_netlist(comp.json_file), args.top,
-                    out / "lean")
+                    out / "lean", sv_path=Path(args.design))
     print(f"mode:  {res.mode}")
     print(f"lean:  {res.lean_file}")
     print(f"props: {res.props_file}")

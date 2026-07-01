@@ -25,10 +25,12 @@ SystemVerilog to Sparkle HDL and AI-Assisted Formal Verification}
 
 \begin{abstract}
 We present \sfv{}, an agentic harness that (i)~\emph{autoformalizes}
-SystemVerilog RTL into Sparkle HDL --- a hardware description language
-embedded in the Lean~4 theorem prover --- and (ii)~performs block-level and
-SoC-level formal verification with a portfolio of provers assisted by a
-large language model. Following the ``everyday provers'' paradigm, every
+SystemVerilog RTL into idiomatic Sparkle HDL --- the Signal DSL of a
+hardware description language embedded in the Lean~4 theorem prover ---
+using an AI-agent translation loop with deterministic, co-simulation-
+validated fallbacks, and (ii)~performs block-level and SoC-level formal
+verification with a portfolio of provers assisted by a large language
+model. Following the ``everyday provers'' paradigm, every
 verdict ships with an independently checkable artifact: safety proofs carry
 $k$-induction certificates or explicit inductive invariants re-checked by an
 SMT solver; bug reports carry counterexample traces that the harness
@@ -72,12 +74,14 @@ a block or an SoC.
 
 \paragraph{Contributions.}
 \begin{enumerate}
-  \item An \textbf{autoformalization pipeline} from SystemVerilog (via Yosys
-        elaboration) to Sparkle HDL Lean~4 sources, covering the full
-        word-level RTL cell library including memories and the complete
-        flip-flop family, with proof-obligation skeletons that follow the
-        Sparkle verification framework's proof patterns
-        (\S\ref{sec:autoformal}).
+  \item An \textbf{AI-agent autoformalization pipeline} from behavioral
+        SystemVerilog to \emph{idiomatic} Sparkle HDL Lean~4 source
+        (Signal DSL with original names and structure preserved): an LLM
+        translate$\to$validate$\to$repair loop backed by a deterministic
+        behavioral-AST translator (co-simulation-validated on the full
+        benchmark suite) and a total netlist-level fallback, with
+        proof-obligation skeletons following the Sparkle verification
+        framework's proof patterns (\S\ref{sec:autoformal}).
   \item A \textbf{sound-by-construction AI proving architecture}: BMC,
         $k$-induction, and Houdini invariant synthesis over the
         HWMCC-standard BTOR2 format, where LLM-proposed lemmas and
@@ -182,21 +186,52 @@ produce an unsound verdict.
 
 \section{Autoformalization to Sparkle HDL}\label{sec:autoformal}
 
-Yosys netlists are bit-indexed while Sparkle's IR is word-level, so the
-formalizer first runs a \emph{bit-vector net reconstruction} layer: adjacent
-bit ids are regrouped into word nets (with priority given to ports and
-public names), and cell connections that straddle nets become explicit
-\texttt{slice}/\texttt{concat} expressions.
+The translation target is \emph{idiomatic Sparkle HDL in Lean~4} --- the
+Signal DSL a Sparkle designer writes, with the original module structure and
+signal names preserved, so the formal model is reviewable against the RTL
+line by line. Three engines attempt the translation in order of decreasing
+idiom and increasing robustness; the Yosys elaboration checked by the prover
+is shared by all three, anchoring the semantics regardless of which engine
+emitted the Lean.
 
-Two emission modes share this layer. \textbf{\texttt{circuitm} mode}
-(robust, any netlist) rebuilds the design through Sparkle's \texttt{CircuitM}
-builder monad --- covering arithmetic, logic, comparison and shift cells,
-\texttt{\$mux}/\texttt{\$pmux}, the complete DFF family ($\pm$sync/async
-reset, enables, polarities, folded with Yosys' priority semantics), and
-\texttt{\$mem\_v2} memories. \textbf{\texttt{signal} mode} (idiomatic, small
-blocks) emits applicative \texttt{Signal} DSL in the style of the
-repository's examples and falls back to \texttt{circuitm} when a construct
-does not fit.
+\paragraph{1. AI-agent translation (primary).} GLM~5.2 receives the
+SystemVerilog source, a Sparkle DSL reference distilled from the repository,
+and few-shot SV$\to$Lean pairs, and emits Signal DSL inside an agentic
+\emph{translate$\to$validate$\to$repair} loop: each candidate must pass
+structural checks and an API whitelist harvested live from the Sparkle
+sources (every \texttt{Signal.*} name used must exist); where a Lean
+toolchain is present the candidate is additionally compiled
+(\texttt{lake env lean}) and its \texttt{\#synthesizeVerilog} output is
+equivalence-checked against the original RTL with Yosys --- the full
+round-trip anchor. Validation errors are fed back verbatim as repair
+prompts. The loop can raise translation quality but never lowers the
+pipeline floor: on failure the deterministic engines below take over.
+
+\paragraph{2. Deterministic behavioral translation.} Verilator's XML AST
+preserves always blocks, if/case structure, expressions, and names. A
+symbolic-execution pass with branch-merge semantics turns clocked always
+blocks into \texttt{Signal.register} definitions (reset folded into the
+register input; feedback closed with \texttt{Signal.loop}; multi-register
+designs bundled via \texttt{declare\_signal\_state}), combinational logic
+into dependency-ordered applicative \texttt{let} bindings
+(\texttt{Signal.mux}, \texttt{hw\_cond} for case trees), and unpacked
+arrays into \texttt{Signal.memory}/\texttt{memoryComboRead}. On the
+benchmark suite this engine translates all 12 block designs with zero
+unsupported constructs, and the full RV32IMA SoC at 129 registers, 6
+memories and 349 combinational nets with 5.3\% TODO density (all one
+construct: SystemVerilog \texttt{function} calls). Fidelity was validated
+by \emph{co-simulation}: an interpreter executing the emitted expression
+trees under Signal semantics matches Verilator simulation of the original
+SV on every output for 300 cycles across all 12 designs, including the
+memory-backed FIFO and memory controller.
+
+\paragraph{3. Netlist reconstruction (last resort).} The Yosys JSON netlist
+is bit-indexed while Sparkle's IR is word-level, so this engine runs a
+bit-vector net reconstruction layer (adjacent bit ids regrouped into word
+nets; straddling connections become explicit \texttt{slice}/\texttt{concat})
+and rebuilds the design through Sparkle's \texttt{CircuitM} builder monad
+--- the complete RTL cell library including the full DFF family and
+\texttt{\$mem\_v2} memories. Low-level but total.
 
 For each property (including \texttt{\$assert} cells auto-extracted from the
 netlist), the formalizer emits a self-contained proof-obligation file: pure

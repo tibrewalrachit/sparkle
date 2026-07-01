@@ -1,0 +1,341 @@
+<?xml version="1.0" ?>
+<!-- DESCRIPTION: Verilator output: XML representation of netlist -->
+<verilator_xml>
+  <files>
+    <file id="c" filename="/usr/share/verilator/include/verilated_std.sv" language="1800-2017"/>
+    <file id="a" filename="&lt;built-in&gt;" language="1800-2017"/>
+    <file id="b" filename="&lt;command-line&gt;" language="1800-2017"/>
+    <file id="d" filename="benchmarks/blocks/round_robin_arbiter/design.sv" language="1800-2017"/>
+  </files>
+  <module_files>
+    <file id="d" filename="benchmarks/blocks/round_robin_arbiter/design.sv" language="1800-2017"/>
+  </module_files>
+  <cells>
+    <cell loc="d,14,8,14,27" name="round_robin_arbiter" submodname="round_robin_arbiter" hier="round_robin_arbiter"/>
+  </cells>
+  <netlist>
+    <module loc="d,14,8,14,27" name="round_robin_arbiter" origName="round_robin_arbiter" topModule="1">
+      <var loc="d,15,18,15,21" name="clk" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk"/>
+      <var loc="d,16,18,16,21" name="rst" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="rst"/>
+      <var loc="d,17,24,17,27" name="req" dtype_id="2" dir="input" pinIndex="3" vartype="logic" origName="req"/>
+      <var loc="d,18,24,18,29" name="grant" dtype_id="2" dir="output" pinIndex="4" vartype="logic" origName="grant"/>
+      <var loc="d,20,17,20,21" name="last" dtype_id="3" vartype="logic" origName="last"/>
+      <initialstatic loc="d,20,24,20,28">
+        <assign loc="d,20,24,20,28" dtype_id="3">
+          <const loc="d,20,24,20,28" name="2&apos;h0" dtype_id="3"/>
+          <varref loc="d,20,24,20,28" name="last" dtype_id="3"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,28,16,28,26" name="masked_req" dtype_id="2" vartype="logic" origName="masked_req"/>
+      <var loc="d,37,16,37,20" name="gidx" dtype_id="3" vartype="logic" origName="gidx"/>
+      <always loc="d,41,5,41,14">
+        <sentree loc="d,41,15,41,16">
+          <senitem loc="d,41,17,41,24" edgeType="POS">
+            <varref loc="d,41,25,41,28" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,41,30,41,35">
+          <if loc="d,42,9,42,11">
+            <varref loc="d,42,13,42,16" name="rst" dtype_id="1"/>
+            <begin>
+              <assigndly loc="d,43,18,43,20" dtype_id="3">
+                <const loc="d,43,21,43,25" name="2&apos;h0" dtype_id="3"/>
+                <varref loc="d,43,13,43,17" name="last" dtype_id="3"/>
+              </assigndly>
+            </begin>
+            <begin>
+              <if loc="d,44,14,44,16">
+                <neq loc="d,44,24,44,26" dtype_id="1">
+                  <const loc="d,44,27,44,31" name="4&apos;h0" dtype_id="2"/>
+                  <varref loc="d,44,18,44,23" name="grant" dtype_id="2"/>
+                </neq>
+                <begin>
+                  <assigndly loc="d,45,18,45,20" dtype_id="3">
+                    <varref loc="d,45,21,45,25" name="gidx" dtype_id="3"/>
+                    <varref loc="d,45,13,45,17" name="last" dtype_id="3"/>
+                  </assigndly>
+                </begin>
+              </if>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <var loc="d,49,17,49,27" name="grant_prev" dtype_id="2" vartype="logic" origName="grant_prev"/>
+      <initialstatic loc="d,49,30,49,34">
+        <assign loc="d,49,30,49,34" dtype_id="2">
+          <const loc="d,49,30,49,34" name="4&apos;h0" dtype_id="2"/>
+          <varref loc="d,49,30,49,34" name="grant_prev" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,50,17,50,25" name="req_prev" dtype_id="2" vartype="logic" origName="req_prev"/>
+      <initialstatic loc="d,50,30,50,34">
+        <assign loc="d,50,30,50,34" dtype_id="2">
+          <const loc="d,50,30,50,34" name="4&apos;h0" dtype_id="2"/>
+          <varref loc="d,50,30,50,34" name="req_prev" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <always loc="d,51,5,51,14">
+        <sentree loc="d,51,15,51,16">
+          <senitem loc="d,51,17,51,24" edgeType="POS">
+            <varref loc="d,51,25,51,28" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,51,30,51,35">
+          <if loc="d,52,9,52,11">
+            <varref loc="d,52,13,52,16" name="rst" dtype_id="1"/>
+            <begin>
+              <begin loc="d,52,18,52,23">
+                <assigndly loc="d,53,24,53,26" dtype_id="2">
+                  <const loc="d,53,27,53,31" name="4&apos;h0" dtype_id="2"/>
+                  <varref loc="d,53,13,53,23" name="grant_prev" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,54,24,54,26" dtype_id="2">
+                  <const loc="d,54,27,54,31" name="4&apos;h0" dtype_id="2"/>
+                  <varref loc="d,54,13,54,21" name="req_prev" dtype_id="2"/>
+                </assigndly>
+              </begin>
+            </begin>
+            <begin>
+              <begin loc="d,55,18,55,23">
+                <assigndly loc="d,56,24,56,26" dtype_id="2">
+                  <varref loc="d,56,27,56,32" name="grant" dtype_id="2"/>
+                  <varref loc="d,56,13,56,23" name="grant_prev" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,57,24,57,26" dtype_id="2">
+                  <varref loc="d,57,27,57,30" name="req" dtype_id="2"/>
+                  <varref loc="d,57,13,57,21" name="req_prev" dtype_id="2"/>
+                </assigndly>
+              </begin>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <always loc="d,64,5,64,11">
+        <sentree loc="d,64,12,64,13">
+          <senitem loc="d,64,14,64,21" edgeType="POS">
+            <varref loc="d,64,22,64,25" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,64,27,64,32">
+          <if loc="d,66,9,66,15">
+            <cexpr loc="d,66,9,66,15" dtype_id="1">
+              <text loc="d,66,9,66,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,66,9,66,15">
+                <neq loc="d,66,42,66,44" dtype_id="1">
+                  <const loc="d,66,45,66,49" name="4&apos;h0" dtype_id="2"/>
+                  <and loc="d,66,24,66,25" dtype_id="2">
+                    <varref loc="d,66,18,66,23" name="grant" dtype_id="2"/>
+                    <sub loc="d,66,33,66,34" dtype_id="2">
+                      <varref loc="d,66,27,66,32" name="grant" dtype_id="2"/>
+                      <const loc="d,66,35,66,39" name="4&apos;h1" dtype_id="2"/>
+                    </sub>
+                  </and>
+                </neq>
+                <begin>
+                  <display loc="d,66,9,66,15" displaytype="$write">
+                    <sformatf loc="d,66,9,66,15" name="[%0t] %%Error: design.sv:66: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="4">
+                      <time loc="d,66,9,66,15" dtype_id="5"/>
+                      <scopename loc="d,66,9,66,15" dtype_id="5"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,66,9,66,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,68,9,68,15">
+            <cexpr loc="d,68,9,68,15" dtype_id="1">
+              <text loc="d,68,9,68,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,68,9,68,15">
+                <neq loc="d,68,32,68,34" dtype_id="1">
+                  <const loc="d,68,35,68,39" name="4&apos;h0" dtype_id="2"/>
+                  <and loc="d,68,24,68,25" dtype_id="2">
+                    <varref loc="d,68,18,68,23" name="grant" dtype_id="2"/>
+                    <not loc="d,68,26,68,27" dtype_id="2">
+                      <varref loc="d,68,27,68,30" name="req" dtype_id="2"/>
+                    </not>
+                  </and>
+                </neq>
+                <begin>
+                  <display loc="d,68,9,68,15" displaytype="$write">
+                    <sformatf loc="d,68,9,68,15" name="[%0t] %%Error: design.sv:68: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="4">
+                      <time loc="d,68,9,68,15" dtype_id="5"/>
+                      <scopename loc="d,68,9,68,15" dtype_id="5"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,68,9,68,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,70,9,70,15">
+            <cexpr loc="d,70,9,70,15" dtype_id="1">
+              <text loc="d,70,9,70,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,70,9,70,15">
+                <neq loc="d,70,31,70,33" dtype_id="1">
+                  <neq loc="d,70,22,70,24" dtype_id="1">
+                    <const loc="d,70,25,70,29" name="4&apos;h0" dtype_id="2"/>
+                    <varref loc="d,70,18,70,21" name="req" dtype_id="2"/>
+                  </neq>
+                  <neq loc="d,70,41,70,43" dtype_id="1">
+                    <const loc="d,70,44,70,48" name="4&apos;h0" dtype_id="2"/>
+                    <varref loc="d,70,35,70,40" name="grant" dtype_id="2"/>
+                  </neq>
+                </neq>
+                <begin>
+                  <display loc="d,70,9,70,15" displaytype="$write">
+                    <sformatf loc="d,70,9,70,15" name="[%0t] %%Error: design.sv:70: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="4">
+                      <time loc="d,70,9,70,15" dtype_id="5"/>
+                      <scopename loc="d,70,9,70,15" dtype_id="5"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,70,9,70,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,73,9,73,15">
+            <cexpr loc="d,73,9,73,15" dtype_id="1">
+              <text loc="d,73,9,73,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,73,9,73,15">
+                <and loc="d,73,60,73,62" dtype_id="1">
+                  <and loc="d,73,35,73,37" dtype_id="1">
+                    <neq loc="d,73,26,73,28" dtype_id="1">
+                      <const loc="d,73,29,73,33" name="4&apos;h0" dtype_id="2"/>
+                      <varref loc="d,73,20,73,25" name="grant" dtype_id="2"/>
+                    </neq>
+                    <eq loc="d,73,45,73,47" dtype_id="1">
+                      <varref loc="d,73,39,73,44" name="grant" dtype_id="2"/>
+                      <varref loc="d,73,48,73,58" name="grant_prev" dtype_id="2"/>
+                    </eq>
+                  </and>
+                  <neq loc="d,74,46,74,48" dtype_id="1">
+                    <const loc="d,74,49,74,53" name="4&apos;h0" dtype_id="2"/>
+                    <and loc="d,74,36,74,37" dtype_id="2">
+                      <and loc="d,74,30,74,31" dtype_id="2">
+                        <varref loc="d,74,21,74,29" name="req_prev" dtype_id="2"/>
+                        <varref loc="d,74,32,74,35" name="req" dtype_id="2"/>
+                      </and>
+                      <not loc="d,74,38,74,39" dtype_id="2">
+                        <varref loc="d,74,39,74,44" name="grant" dtype_id="2"/>
+                      </not>
+                    </and>
+                  </neq>
+                </and>
+                <begin>
+                  <display loc="d,73,9,73,15" displaytype="$write">
+                    <sformatf loc="d,73,9,73,15" name="[%0t] %%Error: design.sv:73: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="4">
+                      <time loc="d,73,9,73,15" dtype_id="5"/>
+                      <scopename loc="d,73,9,73,15" dtype_id="5"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,73,9,73,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <contassign loc="d,34,18,34,19" dtype_id="2">
+        <cond loc="d,34,41,34,42" dtype_id="2">
+          <eq loc="d,34,32,34,34" dtype_id="1">
+            <const loc="d,34,35,34,39" name="4&apos;h0" dtype_id="2"/>
+            <varref loc="d,28,33,28,34" name="masked_req" dtype_id="2"/>
+          </eq>
+          <and loc="d,32,35,32,36" dtype_id="2">
+            <varref loc="d,17,24,17,27" name="req" dtype_id="2"/>
+            <add loc="d,32,43,32,44" dtype_id="2">
+              <const loc="d,32,45,32,49" name="4&apos;h1" dtype_id="2"/>
+              <not loc="d,32,38,32,39" dtype_id="2">
+                <varref loc="d,17,24,17,27" name="req" dtype_id="2"/>
+              </not>
+            </add>
+          </and>
+          <and loc="d,31,42,31,43" dtype_id="2">
+            <varref loc="d,28,33,28,34" name="masked_req" dtype_id="2"/>
+            <add loc="d,31,57,31,58" dtype_id="2">
+              <const loc="d,31,59,31,63" name="4&apos;h1" dtype_id="2"/>
+              <not loc="d,31,45,31,46" dtype_id="2">
+                <varref loc="d,28,33,28,34" name="masked_req" dtype_id="2"/>
+              </not>
+            </add>
+          </and>
+        </cond>
+        <varref loc="d,18,24,18,29" name="grant" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,37,21,37,22" dtype_id="3">
+        <cond loc="d,37,32,37,33" dtype_id="3">
+          <sel loc="d,37,28,37,29" dtype_id="1">
+            <varref loc="d,34,41,34,42" name="grant" dtype_id="2"/>
+            <const loc="d,37,28,37,29" name="32&apos;h1" dtype_id="6"/>
+            <const loc="d,37,28,37,29" name="32&apos;h1" dtype_id="6"/>
+          </sel>
+          <const loc="d,37,34,37,38" name="2&apos;h1" dtype_id="3"/>
+          <cond loc="d,38,32,38,33" dtype_id="3">
+            <sel loc="d,38,28,38,29" dtype_id="1">
+              <varref loc="d,34,41,34,42" name="grant" dtype_id="2"/>
+              <const loc="d,38,28,38,29" name="32&apos;h2" dtype_id="6"/>
+              <const loc="d,38,28,38,29" name="32&apos;h1" dtype_id="6"/>
+            </sel>
+            <const loc="d,38,34,38,38" name="2&apos;h2" dtype_id="3"/>
+            <cond loc="d,39,32,39,33" dtype_id="3">
+              <sel loc="d,39,28,39,29" dtype_id="1">
+                <varref loc="d,34,41,34,42" name="grant" dtype_id="2"/>
+                <const loc="d,39,28,39,29" name="32&apos;h3" dtype_id="6"/>
+                <const loc="d,39,28,39,29" name="32&apos;h1" dtype_id="6"/>
+              </sel>
+              <const loc="d,39,34,39,38" name="2&apos;h3" dtype_id="3"/>
+              <const loc="d,39,41,39,45" name="2&apos;h0" dtype_id="3"/>
+            </cond>
+          </cond>
+        </cond>
+        <varref loc="d,37,16,37,20" name="gidx" dtype_id="3"/>
+      </contassign>
+      <contassign loc="d,28,27,28,28" dtype_id="2">
+        <and loc="d,28,33,28,34" dtype_id="2">
+          <varref loc="d,17,24,17,27" name="req" dtype_id="2"/>
+          <cond loc="d,24,24,24,25" dtype_id="2">
+            <eq loc="d,24,15,24,17" dtype_id="1">
+              <const loc="d,24,18,24,22" name="2&apos;h0" dtype_id="3"/>
+              <varref loc="d,20,17,20,21" name="last" dtype_id="3"/>
+            </eq>
+            <const loc="d,24,26,24,33" name="4&apos;he" dtype_id="2"/>
+            <cond loc="d,25,24,25,25" dtype_id="2">
+              <eq loc="d,25,15,25,17" dtype_id="1">
+                <const loc="d,25,18,25,22" name="2&apos;h1" dtype_id="3"/>
+                <varref loc="d,20,17,20,21" name="last" dtype_id="3"/>
+              </eq>
+              <const loc="d,25,26,25,33" name="4&apos;hc" dtype_id="2"/>
+              <cond loc="d,26,24,26,25" dtype_id="2">
+                <eq loc="d,26,15,26,17" dtype_id="1">
+                  <const loc="d,26,18,26,22" name="2&apos;h2" dtype_id="3"/>
+                  <varref loc="d,20,17,20,21" name="last" dtype_id="3"/>
+                </eq>
+                <const loc="d,26,26,26,33" name="4&apos;h8" dtype_id="2"/>
+                <const loc="d,27,26,27,33" name="4&apos;h0" dtype_id="2"/>
+              </cond>
+            </cond>
+          </cond>
+        </and>
+        <varref loc="d,28,16,28,26" name="masked_req" dtype_id="2"/>
+      </contassign>
+    </module>
+    <typetable loc="a,0,0,0,0">
+      <voiddtype loc="c,51,21,51,30" id="7"/>
+      <basicdtype loc="d,15,12,15,17" id="1" name="logic"/>
+      <basicdtype loc="d,17,12,17,17" id="2" name="logic" left="3" right="0"/>
+      <basicdtype loc="d,20,5,20,10" id="3" name="logic" left="1" right="0"/>
+      <basicdtype loc="d,37,28,37,29" id="6" name="logic" left="31" right="0"/>
+      <basicdtype loc="d,66,9,66,15" id="4" name="string"/>
+      <basicdtype loc="d,66,9,66,15" id="5" name="QData" left="63" right="0"/>
+    </typetable>
+  </netlist>
+</verilator_xml>

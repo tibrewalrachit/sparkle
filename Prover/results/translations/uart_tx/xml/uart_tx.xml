@@ -1,0 +1,489 @@
+<?xml version="1.0" ?>
+<!-- DESCRIPTION: Verilator output: XML representation of netlist -->
+<verilator_xml>
+  <files>
+    <file id="c" filename="/usr/share/verilator/include/verilated_std.sv" language="1800-2017"/>
+    <file id="a" filename="&lt;built-in&gt;" language="1800-2017"/>
+    <file id="b" filename="&lt;command-line&gt;" language="1800-2017"/>
+    <file id="d" filename="benchmarks/blocks/uart_tx/design.sv" language="1800-2017"/>
+  </files>
+  <module_files>
+    <file id="d" filename="benchmarks/blocks/uart_tx/design.sv" language="1800-2017"/>
+  </module_files>
+  <cells>
+    <cell loc="d,11,8,11,15" name="uart_tx" submodname="uart_tx" hier="uart_tx"/>
+  </cells>
+  <netlist>
+    <module loc="d,11,8,11,15" name="uart_tx" origName="uart_tx" topModule="1">
+      <var loc="d,12,18,12,21" name="clk" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk"/>
+      <var loc="d,13,18,13,21" name="rst" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="rst"/>
+      <var loc="d,14,24,14,32" name="tx_start" dtype_id="1" dir="input" pinIndex="3" vartype="logic" origName="tx_start"/>
+      <var loc="d,15,24,15,31" name="tx_data" dtype_id="2" dir="input" pinIndex="4" vartype="logic" origName="tx_data"/>
+      <var loc="d,16,24,16,26" name="tx" dtype_id="1" dir="output" pinIndex="5" vartype="logic" origName="tx"/>
+      <var loc="d,17,24,17,28" name="busy" dtype_id="1" dir="output" pinIndex="6" vartype="logic" origName="busy"/>
+      <var loc="d,20,28,20,35" name="ST_IDLE" dtype_id="3" vartype="logic" origName="ST_IDLE" localparam="true">
+        <const loc="d,20,39,20,46" name="4&apos;h1" dtype_id="3"/>
+      </var>
+      <var loc="d,21,28,21,36" name="ST_START" dtype_id="3" vartype="logic" origName="ST_START" localparam="true">
+        <const loc="d,21,39,21,46" name="4&apos;h2" dtype_id="3"/>
+      </var>
+      <var loc="d,22,28,22,35" name="ST_DATA" dtype_id="3" vartype="logic" origName="ST_DATA" localparam="true">
+        <const loc="d,22,39,22,46" name="4&apos;h4" dtype_id="3"/>
+      </var>
+      <var loc="d,23,28,23,35" name="ST_STOP" dtype_id="3" vartype="logic" origName="ST_STOP" localparam="true">
+        <const loc="d,23,39,23,46" name="4&apos;h8" dtype_id="3"/>
+      </var>
+      <var loc="d,25,28,25,31" name="DIV" dtype_id="4" vartype="logic" origName="DIV" localparam="true">
+        <const loc="d,25,34,25,38" name="3&apos;h3" dtype_id="4"/>
+      </var>
+      <var loc="d,27,17,27,22" name="state" dtype_id="3" vartype="logic" origName="state"/>
+      <initialstatic loc="d,27,26,27,33">
+        <assign loc="d,27,26,27,33" dtype_id="3">
+          <const loc="d,27,26,27,33" name="4&apos;h1" dtype_id="3"/>
+          <varref loc="d,27,26,27,33" name="state" dtype_id="3"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,28,17,28,21" name="baud" dtype_id="4" vartype="logic" origName="baud"/>
+      <initialstatic loc="d,28,26,28,30">
+        <assign loc="d,28,26,28,30" dtype_id="4">
+          <const loc="d,28,26,28,30" name="3&apos;h0" dtype_id="4"/>
+          <varref loc="d,28,26,28,30" name="baud" dtype_id="4"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,29,17,29,23" name="bitidx" dtype_id="4" vartype="logic" origName="bitidx"/>
+      <initialstatic loc="d,29,26,29,30">
+        <assign loc="d,29,26,29,30" dtype_id="4">
+          <const loc="d,29,26,29,30" name="3&apos;h0" dtype_id="4"/>
+          <varref loc="d,29,26,29,30" name="bitidx" dtype_id="4"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,30,17,30,19" name="sh" dtype_id="2" vartype="logic" origName="sh"/>
+      <initialstatic loc="d,30,26,30,30">
+        <assign loc="d,30,26,30,30" dtype_id="2">
+          <const loc="d,30,26,30,30" name="8&apos;h0" dtype_id="2"/>
+          <varref loc="d,30,26,30,30" name="sh" dtype_id="2"/>
+        </assign>
+      </initialstatic>
+      <var loc="d,32,10,32,14" name="tick" dtype_id="1" vartype="logic" origName="tick"/>
+      <always loc="d,34,5,34,14">
+        <sentree loc="d,34,15,34,16">
+          <senitem loc="d,34,17,34,24" edgeType="POS">
+            <varref loc="d,34,25,34,28" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,34,30,34,35">
+          <if loc="d,35,9,35,11">
+            <varref loc="d,35,13,35,16" name="rst" dtype_id="1"/>
+            <begin>
+              <begin loc="d,35,18,35,23">
+                <assigndly loc="d,36,20,36,22" dtype_id="3">
+                  <const loc="d,36,23,36,30" name="4&apos;h1" dtype_id="3"/>
+                  <varref loc="d,36,13,36,18" name="state" dtype_id="3"/>
+                </assigndly>
+                <assigndly loc="d,37,20,37,22" dtype_id="4">
+                  <const loc="d,37,23,37,27" name="3&apos;h0" dtype_id="4"/>
+                  <varref loc="d,37,13,37,17" name="baud" dtype_id="4"/>
+                </assigndly>
+                <assigndly loc="d,38,20,38,22" dtype_id="4">
+                  <const loc="d,38,23,38,27" name="3&apos;h0" dtype_id="4"/>
+                  <varref loc="d,38,13,38,19" name="bitidx" dtype_id="4"/>
+                </assigndly>
+                <assigndly loc="d,39,20,39,22" dtype_id="2">
+                  <const loc="d,39,23,39,27" name="8&apos;h0" dtype_id="2"/>
+                  <varref loc="d,39,13,39,15" name="sh" dtype_id="2"/>
+                </assigndly>
+              </begin>
+            </begin>
+            <begin>
+              <begin loc="d,40,18,40,23">
+                <case loc="d,41,13,41,17">
+                  <varref loc="d,41,19,41,24" name="state" dtype_id="3"/>
+                  <caseitem loc="d,42,24,42,25">
+                    <const loc="d,42,17,42,24" name="4&apos;h1" dtype_id="3"/>
+                    <begin loc="d,42,26,42,31">
+                      <assigndly loc="d,43,28,43,30" dtype_id="4">
+                        <const loc="d,43,31,43,35" name="3&apos;h0" dtype_id="4"/>
+                        <varref loc="d,43,21,43,25" name="baud" dtype_id="4"/>
+                      </assigndly>
+                      <assigndly loc="d,44,28,44,30" dtype_id="4">
+                        <const loc="d,44,31,44,35" name="3&apos;h0" dtype_id="4"/>
+                        <varref loc="d,44,21,44,27" name="bitidx" dtype_id="4"/>
+                      </assigndly>
+                      <if loc="d,45,21,45,23">
+                        <varref loc="d,45,25,45,33" name="tx_start" dtype_id="1"/>
+                        <begin>
+                          <begin loc="d,45,35,45,40">
+                            <assigndly loc="d,46,31,46,33" dtype_id="2">
+                              <varref loc="d,46,34,46,41" name="tx_data" dtype_id="2"/>
+                              <varref loc="d,46,25,46,27" name="sh" dtype_id="2"/>
+                            </assigndly>
+                            <assigndly loc="d,47,31,47,33" dtype_id="3">
+                              <const loc="d,47,34,47,42" name="4&apos;h2" dtype_id="3"/>
+                              <varref loc="d,47,25,47,30" name="state" dtype_id="3"/>
+                            </assigndly>
+                          </begin>
+                        </begin>
+                      </if>
+                    </begin>
+                  </caseitem>
+                  <caseitem loc="d,50,25,50,26">
+                    <const loc="d,50,17,50,25" name="4&apos;h2" dtype_id="3"/>
+                    <begin loc="d,50,27,50,32">
+                      <if loc="d,51,21,51,23">
+                        <varref loc="d,51,25,51,29" name="tick" dtype_id="1"/>
+                        <begin>
+                          <begin loc="d,51,31,51,36">
+                            <assigndly loc="d,52,32,52,34" dtype_id="4">
+                              <const loc="d,52,35,52,39" name="3&apos;h0" dtype_id="4"/>
+                              <varref loc="d,52,25,52,29" name="baud" dtype_id="4"/>
+                            </assigndly>
+                            <assigndly loc="d,53,32,53,34" dtype_id="4">
+                              <const loc="d,53,35,53,39" name="3&apos;h0" dtype_id="4"/>
+                              <varref loc="d,53,25,53,31" name="bitidx" dtype_id="4"/>
+                            </assigndly>
+                            <assigndly loc="d,54,32,54,34" dtype_id="3">
+                              <const loc="d,54,35,54,42" name="4&apos;h4" dtype_id="3"/>
+                              <varref loc="d,54,25,54,30" name="state" dtype_id="3"/>
+                            </assigndly>
+                          </begin>
+                        </begin>
+                        <begin>
+                          <assigndly loc="d,56,30,56,32" dtype_id="4">
+                            <add loc="d,56,38,56,39" dtype_id="4">
+                              <const loc="d,56,40,56,44" name="3&apos;h1" dtype_id="4"/>
+                              <varref loc="d,56,33,56,37" name="baud" dtype_id="4"/>
+                            </add>
+                            <varref loc="d,56,25,56,29" name="baud" dtype_id="4"/>
+                          </assigndly>
+                        </begin>
+                      </if>
+                    </begin>
+                  </caseitem>
+                  <caseitem loc="d,58,24,58,25">
+                    <const loc="d,58,17,58,24" name="4&apos;h4" dtype_id="3"/>
+                    <begin loc="d,58,26,58,31">
+                      <if loc="d,59,21,59,23">
+                        <varref loc="d,59,25,59,29" name="tick" dtype_id="1"/>
+                        <begin>
+                          <begin loc="d,59,31,59,36">
+                            <assigndly loc="d,60,30,60,32" dtype_id="4">
+                              <const loc="d,60,33,60,37" name="3&apos;h0" dtype_id="4"/>
+                              <varref loc="d,60,25,60,29" name="baud" dtype_id="4"/>
+                            </assigndly>
+                            <assigndly loc="d,61,30,61,32" dtype_id="2">
+                              <extend loc="d,61,38,61,39" dtype_id="2" width="8" widthminv="7">
+                                <sel loc="d,61,42,61,43" dtype_id="5">
+                                  <varref loc="d,61,40,61,42" name="sh" dtype_id="2"/>
+                                  <const loc="d,61,45,61,46" name="3&apos;h1" dtype_id="6"/>
+                                  <const loc="d,61,43,61,44" name="32&apos;h7" dtype_id="7"/>
+                                </sel>
+                              </extend>
+                              <varref loc="d,61,25,61,27" name="sh" dtype_id="2"/>
+                            </assigndly>
+                            <if loc="d,62,25,62,27">
+                              <eq loc="d,62,36,62,38" dtype_id="1">
+                                <const loc="d,62,39,62,43" name="3&apos;h7" dtype_id="4"/>
+                                <varref loc="d,62,29,62,35" name="bitidx" dtype_id="4"/>
+                              </eq>
+                              <begin>
+                                <assigndly loc="d,63,35,63,37" dtype_id="3">
+                                  <const loc="d,63,38,63,45" name="4&apos;h8" dtype_id="3"/>
+                                  <varref loc="d,63,29,63,34" name="state" dtype_id="3"/>
+                                </assigndly>
+                              </begin>
+                              <begin>
+                                <assigndly loc="d,65,36,65,38" dtype_id="4">
+                                  <add loc="d,65,46,65,47" dtype_id="4">
+                                    <const loc="d,65,48,65,52" name="3&apos;h1" dtype_id="4"/>
+                                    <varref loc="d,65,39,65,45" name="bitidx" dtype_id="4"/>
+                                  </add>
+                                  <varref loc="d,65,29,65,35" name="bitidx" dtype_id="4"/>
+                                </assigndly>
+                              </begin>
+                            </if>
+                          </begin>
+                        </begin>
+                        <begin>
+                          <assigndly loc="d,67,30,67,32" dtype_id="4">
+                            <add loc="d,67,38,67,39" dtype_id="4">
+                              <const loc="d,67,40,67,44" name="3&apos;h1" dtype_id="4"/>
+                              <varref loc="d,67,33,67,37" name="baud" dtype_id="4"/>
+                            </add>
+                            <varref loc="d,67,25,67,29" name="baud" dtype_id="4"/>
+                          </assigndly>
+                        </begin>
+                      </if>
+                    </begin>
+                  </caseitem>
+                  <caseitem loc="d,69,24,69,25">
+                    <const loc="d,69,17,69,24" name="4&apos;h8" dtype_id="3"/>
+                    <begin loc="d,69,26,69,31">
+                      <if loc="d,70,21,70,23">
+                        <varref loc="d,70,25,70,29" name="tick" dtype_id="1"/>
+                        <begin>
+                          <begin loc="d,70,31,70,36">
+                            <assigndly loc="d,71,31,71,33" dtype_id="4">
+                              <const loc="d,71,34,71,38" name="3&apos;h0" dtype_id="4"/>
+                              <varref loc="d,71,25,71,29" name="baud" dtype_id="4"/>
+                            </assigndly>
+                            <assigndly loc="d,72,31,72,33" dtype_id="3">
+                              <const loc="d,72,34,72,41" name="4&apos;h1" dtype_id="3"/>
+                              <varref loc="d,72,25,72,30" name="state" dtype_id="3"/>
+                            </assigndly>
+                          </begin>
+                        </begin>
+                        <begin>
+                          <assigndly loc="d,74,30,74,32" dtype_id="4">
+                            <add loc="d,74,38,74,39" dtype_id="4">
+                              <const loc="d,74,40,74,44" name="3&apos;h1" dtype_id="4"/>
+                              <varref loc="d,74,33,74,37" name="baud" dtype_id="4"/>
+                            </add>
+                            <varref loc="d,74,25,74,29" name="baud" dtype_id="4"/>
+                          </assigndly>
+                        </begin>
+                      </if>
+                    </begin>
+                  </caseitem>
+                  <caseitem loc="d,76,17,76,24">
+                    <assigndly loc="d,76,32,76,34" dtype_id="3">
+                      <const loc="d,76,35,76,42" name="4&apos;h1" dtype_id="3"/>
+                      <varref loc="d,76,26,76,31" name="state" dtype_id="3"/>
+                    </assigndly>
+                  </caseitem>
+                </case>
+              </begin>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <always loc="d,89,5,89,11">
+        <sentree loc="d,89,12,89,13">
+          <senitem loc="d,89,14,89,21" edgeType="POS">
+            <varref loc="d,89,22,89,25" name="clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,89,27,89,32">
+          <if loc="d,91,9,91,15">
+            <cexpr loc="d,91,9,91,15" dtype_id="1">
+              <text loc="d,91,9,91,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,91,9,91,15">
+                <not loc="d,92,34,92,36" dtype_id="1">
+                  <or loc="d,92,34,92,36" dtype_id="1">
+                    <or loc="d,91,55,91,57" dtype_id="1">
+                      <or loc="d,91,34,91,36" dtype_id="1">
+                        <eq loc="d,91,23,91,25" dtype_id="1">
+                          <const loc="d,91,26,91,33" name="4&apos;h1" dtype_id="3"/>
+                          <varref loc="d,91,17,91,22" name="state" dtype_id="3"/>
+                        </eq>
+                        <eq loc="d,91,43,91,45" dtype_id="1">
+                          <const loc="d,91,46,91,54" name="4&apos;h2" dtype_id="3"/>
+                          <varref loc="d,91,37,91,42" name="state" dtype_id="3"/>
+                        </eq>
+                      </or>
+                      <eq loc="d,92,23,92,25" dtype_id="1">
+                        <const loc="d,92,26,92,33" name="4&apos;h4" dtype_id="3"/>
+                        <varref loc="d,92,17,92,22" name="state" dtype_id="3"/>
+                      </eq>
+                    </or>
+                    <eq loc="d,92,43,92,45" dtype_id="1">
+                      <const loc="d,92,46,92,53" name="4&apos;h8" dtype_id="3"/>
+                      <varref loc="d,92,37,92,42" name="state" dtype_id="3"/>
+                    </eq>
+                  </or>
+                </not>
+                <begin>
+                  <display loc="d,91,9,91,15" displaytype="$write">
+                    <sformatf loc="d,91,9,91,15" name="[%0t] %%Error: design.sv:91: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="8">
+                      <time loc="d,91,9,91,15" dtype_id="9"/>
+                      <scopename loc="d,91,9,91,15" dtype_id="9"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,91,9,91,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,94,9,94,15">
+            <cexpr loc="d,94,9,94,15" dtype_id="1">
+              <text loc="d,94,9,94,15"/>
+            </cexpr>
+            <begin>
+              <if loc="d,94,9,94,15">
+                <lt loc="d,94,22,94,24" dtype_id="1">
+                  <const loc="d,94,25,94,28" name="3&apos;h3" dtype_id="4"/>
+                  <varref loc="d,94,17,94,21" name="baud" dtype_id="4"/>
+                </lt>
+                <begin>
+                  <display loc="d,94,9,94,15" displaytype="$write">
+                    <sformatf loc="d,94,9,94,15" name="[%0t] %%Error: design.sv:94: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="8">
+                      <time loc="d,94,9,94,15" dtype_id="9"/>
+                      <scopename loc="d,94,9,94,15" dtype_id="9"/>
+                    </sformatf>
+                  </display>
+                  <stop loc="d,94,9,94,15"/>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,96,9,96,11">
+            <eq loc="d,96,19,96,21" dtype_id="1">
+              <const loc="d,96,22,96,29" name="4&apos;h1" dtype_id="3"/>
+              <varref loc="d,96,13,96,18" name="state" dtype_id="3"/>
+            </eq>
+            <begin>
+              <begin loc="d,96,31,96,36">
+                <if loc="d,97,13,97,19">
+                  <cexpr loc="d,97,13,97,19" dtype_id="1">
+                    <text loc="d,97,13,97,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,97,13,97,19">
+                      <not loc="d,97,21,97,23" dtype_id="1">
+                        <varref loc="d,97,21,97,23" name="tx" dtype_id="1"/>
+                      </not>
+                      <begin>
+                        <display loc="d,97,13,97,19" displaytype="$write">
+                          <sformatf loc="d,97,13,97,19" name="[%0t] %%Error: design.sv:97: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="8">
+                            <time loc="d,97,13,97,19" dtype_id="9"/>
+                            <scopename loc="d,97,13,97,19" dtype_id="9"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,97,13,97,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+                <if loc="d,98,13,98,19">
+                  <cexpr loc="d,98,13,98,19" dtype_id="1">
+                    <text loc="d,98,13,98,19"/>
+                  </cexpr>
+                  <begin>
+                    <if loc="d,98,13,98,19">
+                      <neq loc="d,98,26,98,28" dtype_id="1">
+                        <const loc="d,98,29,98,33" name="3&apos;h0" dtype_id="4"/>
+                        <varref loc="d,98,21,98,25" name="baud" dtype_id="4"/>
+                      </neq>
+                      <begin>
+                        <display loc="d,98,13,98,19" displaytype="$write">
+                          <sformatf loc="d,98,13,98,19" name="[%0t] %%Error: design.sv:98: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="8">
+                            <time loc="d,98,13,98,19" dtype_id="9"/>
+                            <scopename loc="d,98,13,98,19" dtype_id="9"/>
+                          </sformatf>
+                        </display>
+                        <stop loc="d,98,13,98,19"/>
+                      </begin>
+                    </if>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <if loc="d,101,9,101,11">
+            <eq loc="d,101,19,101,21" dtype_id="1">
+              <const loc="d,101,22,101,30" name="4&apos;h2" dtype_id="3"/>
+              <varref loc="d,101,13,101,18" name="state" dtype_id="3"/>
+            </eq>
+            <begin>
+              <if loc="d,102,13,102,19">
+                <cexpr loc="d,102,13,102,19" dtype_id="1">
+                  <text loc="d,102,13,102,19"/>
+                </cexpr>
+                <begin>
+                  <if loc="d,102,13,102,19">
+                    <varref loc="d,102,21,102,23" name="tx" dtype_id="1"/>
+                    <begin>
+                      <display loc="d,102,13,102,19" displaytype="$write">
+                        <sformatf loc="d,102,13,102,19" name="[%0t] %%Error: design.sv:102: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="8">
+                          <time loc="d,102,13,102,19" dtype_id="9"/>
+                          <scopename loc="d,102,13,102,19" dtype_id="9"/>
+                        </sformatf>
+                      </display>
+                      <stop loc="d,102,13,102,19"/>
+                    </begin>
+                  </if>
+                </begin>
+              </if>
+            </begin>
+          </if>
+          <if loc="d,104,9,104,11">
+            <eq loc="d,104,19,104,21" dtype_id="1">
+              <const loc="d,104,22,104,29" name="4&apos;h8" dtype_id="3"/>
+              <varref loc="d,104,13,104,18" name="state" dtype_id="3"/>
+            </eq>
+            <begin>
+              <if loc="d,105,13,105,19">
+                <cexpr loc="d,105,13,105,19" dtype_id="1">
+                  <text loc="d,105,13,105,19"/>
+                </cexpr>
+                <begin>
+                  <if loc="d,105,13,105,19">
+                    <not loc="d,105,21,105,23" dtype_id="1">
+                      <varref loc="d,105,21,105,23" name="tx" dtype_id="1"/>
+                    </not>
+                    <begin>
+                      <display loc="d,105,13,105,19" displaytype="$write">
+                        <sformatf loc="d,105,13,105,19" name="[%0t] %%Error: design.sv:105: Assertion failed in %m: &apos;assert&apos; failed.&#10;" dtype_id="8">
+                          <time loc="d,105,13,105,19" dtype_id="9"/>
+                          <scopename loc="d,105,13,105,19" dtype_id="9"/>
+                        </sformatf>
+                      </display>
+                      <stop loc="d,105,13,105,19"/>
+                    </begin>
+                  </if>
+                </begin>
+              </if>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <contassign loc="d,81,15,81,16" dtype_id="1">
+        <and loc="d,81,37,81,38" dtype_id="1">
+          <neq loc="d,81,37,81,38" dtype_id="1">
+            <const loc="d,81,27,81,35" name="4&apos;h2" dtype_id="3"/>
+            <varref loc="d,27,17,27,22" name="state" dtype_id="3"/>
+          </neq>
+          <or loc="d,82,37,82,38" dtype_id="1">
+            <neq loc="d,82,37,82,38" dtype_id="1">
+              <const loc="d,82,27,82,34" name="4&apos;h4" dtype_id="3"/>
+              <varref loc="d,27,17,27,22" name="state" dtype_id="3"/>
+            </neq>
+            <sel loc="d,82,41,82,42" dtype_id="1">
+              <varref loc="d,30,17,30,19" name="sh" dtype_id="2"/>
+              <const loc="d,82,41,82,42" name="32&apos;h0" dtype_id="7"/>
+              <const loc="d,82,41,82,42" name="32&apos;h1" dtype_id="7"/>
+            </sel>
+          </or>
+        </and>
+        <varref loc="d,16,24,16,26" name="tx" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,84,17,84,18" dtype_id="1">
+        <neq loc="d,84,26,84,28" dtype_id="1">
+          <const loc="d,84,29,84,36" name="4&apos;h1" dtype_id="3"/>
+          <varref loc="d,27,17,27,22" name="state" dtype_id="3"/>
+        </neq>
+        <varref loc="d,17,24,17,28" name="busy" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,32,15,32,16" dtype_id="1">
+        <eq loc="d,32,23,32,25" dtype_id="1">
+          <const loc="d,32,26,32,29" name="3&apos;h3" dtype_id="4"/>
+          <varref loc="d,28,17,28,21" name="baud" dtype_id="4"/>
+        </eq>
+        <varref loc="d,32,10,32,14" name="tick" dtype_id="1"/>
+      </contassign>
+    </module>
+    <typetable loc="a,0,0,0,0">
+      <voiddtype loc="c,51,21,51,30" id="10"/>
+      <basicdtype loc="d,20,39,20,46" id="3" name="logic" left="3" right="0"/>
+      <basicdtype loc="d,25,34,25,38" id="4" name="logic" left="2" right="0"/>
+      <basicdtype loc="d,12,12,12,17" id="1" name="logic"/>
+      <basicdtype loc="d,15,12,15,17" id="2" name="logic" left="7" right="0"/>
+      <basicdtype loc="d,61,42,61,43" id="5" name="logic" left="6" right="0"/>
+      <basicdtype loc="d,61,42,61,43" id="6" name="logic" left="2" right="0" signed="true"/>
+      <basicdtype loc="d,61,43,61,44" id="7" name="logic" left="31" right="0"/>
+      <basicdtype loc="d,91,9,91,15" id="8" name="string"/>
+      <basicdtype loc="d,91,9,91,15" id="9" name="QData" left="63" right="0"/>
+    </typetable>
+  </netlist>
+</verilator_xml>
