@@ -5,3 +5,4 @@ fv_out/
 *.log
 *.out
 *.toc
+results/translations/*/xml/
