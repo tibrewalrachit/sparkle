@@ -9,13 +9,13 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 37,
+      "min_depth": 38,
       "description": "Stop bit drives the line low (mux copy-paste from the start-bit branch). Exposing it requires transmitting a full frame: start + 8 data bits at 4 cycles/bit (deep counterexample, ~37 cycles)."
     },
     {
       "file": "bug2.sv",
       "expect": "bug",
-      "min_depth": 5,
+      "min_depth": 6,
       "description": "Wrong terminal count in the baud divider (DIV+1): the baud counter exceeds its bound."
     }
   ],

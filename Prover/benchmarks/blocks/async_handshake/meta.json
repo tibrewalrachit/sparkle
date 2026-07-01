@@ -9,7 +9,7 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 5,
+      "min_depth": 6,
       "description": "Return-to-zero race: the sender leaves its WAIT phase without waiting for ack to fall, so a new transfer can overwrite the held data while the receiver is still releasing ack."
     }
   ],

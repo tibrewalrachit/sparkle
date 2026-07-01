@@ -1,6 +1,6 @@
 {
   "top": "lfsr",
-  "category": "counter",
+  "category": "crypto",
   "safe": {
     "file": "design.sv",
     "expect": "safe"
@@ -9,7 +9,7 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 2,
+      "min_depth": 3,
       "description": "Feedback tap on bit 0 dropped: loading 0x0001 then shifting reaches the all-zero lockup state."
     }
   ],

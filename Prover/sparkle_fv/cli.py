@@ -64,6 +64,20 @@ def _cmd_bughunt(args) -> int:
     return 0 if v.status != "BUG" else 1
 
 
+def _cmd_converge(args) -> int:
+    from .convergence import converge
+    d = converge(Path(args.design), args.top, Path(args.out),
+                 max_bmc=args.max_bmc, max_k=args.max_k,
+                 timeout_s=args.timeout, use_llm=not args.no_llm,
+                 mine=not args.no_mine, max_mined=args.max_mined)
+    s = d["summary"]
+    print(f"\nconvergence: {s['proven']}/{s['total']} proven, "
+          f"{s['bounded']} bounded, {s['falsified']} falsified, "
+          f"{s['vacuous']} vacuous; COI coverage {s['coi_coverage_pct']}%")
+    print(f"dossier: {Path(args.out) / 'CONVERGENCE.md'}")
+    return 0 if s["falsified"] == 0 else 1
+
+
 def _cmd_bench(args) -> int:
     from .bench import render_report, run_suite
     results = run_suite(Path(args.suite), Path(args.out),
@@ -110,6 +124,15 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("bughunt", help="BMC bug hunt + Verilator replay")
     common(p)
     p.set_defaults(fn=_cmd_bughunt)
+
+    p = sub.add_parser("converge",
+                       help="synthesize + prove a full-SoC property set and "
+                            "write the convergence dossier")
+    common(p)
+    p.add_argument("--no-mine", action="store_true",
+                   help="disable structural property mining")
+    p.add_argument("--max-mined", type=int, default=40)
+    p.set_defaults(fn=_cmd_converge)
 
     p = sub.add_parser("bench", help="run benchmark suite vs yosys-smtbmc")
     common(p, with_top=False)

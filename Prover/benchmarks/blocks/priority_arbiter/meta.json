@@ -9,7 +9,7 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 11,
+      "min_depth": 12,
       "description": "Off-by-one starvation threshold (> instead of >=): boost kicks in one cycle late, so the worst-case chain pushes a wait counter to LIMIT+3, violating the bound. Needs ~11 cycles of sustained contention."
     }
   ],

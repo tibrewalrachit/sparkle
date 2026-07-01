@@ -863,6 +863,26 @@ lake test
 cd verilator && make build && ./obj_dir/Vrv32i_soc ../firmware/firmware.hex 500000
 ```
 
+## sparkle-fv: Agentic Formal Verification Harness
+
+[`Prover/`](Prover/README.md) contains **sparkle-fv**, an agentic harness
+that closes the loop in the other direction: it autoformalizes existing
+SystemVerilog *into* Sparkle HDL (Lean 4) and performs block- and SoC-level
+formal verification with an AI-assisted prover portfolio (incremental BMC,
+k-induction, Houdini invariant synthesis with GLM-5.2 lemma proposals).
+
+- Bugs are surfaced as counterexample traces and **replayed through
+  Verilator** against the original RTL for confirmation;
+- Safe verdicts carry machine-re-checkable certificates (k-induction depth
+  or an explicit inductive invariant);
+- `sparkle-fv converge` synthesizes a full-SoC property set and emits a
+  **convergence dossier** (dispositions, proof radii, cone-of-influence
+  coverage, assumption audit) for DV sign-off;
+- Evaluated on an HWMCC-style benchmark suite (`Prover/benchmarks/`)
+  against yosys-smtbmc — see `Prover/results/`.
+
+See [`Prover/README.md`](Prover/README.md) for the detailed architecture.
+
 ## Documentation
 
 Generate full API documentation with doc-gen4:

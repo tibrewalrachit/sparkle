@@ -9,7 +9,7 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 8,
+      "min_depth": 9,
       "description": "Off-by-one full threshold (count == DEPTH+1): a 9th enqueue is accepted, overflowing the FIFO. Needs 8 back-to-back enqueues to expose."
     },
     {

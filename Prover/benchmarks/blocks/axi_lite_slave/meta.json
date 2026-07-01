@@ -9,13 +9,13 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 2,
+      "min_depth": 3,
       "description": "Handshake race: an early new AWVALID aborts a pending response, deasserting BVALID before BREADY (violates the VALID-stable rule)."
     },
     {
       "file": "bug2.sv",
       "expect": "bug",
-      "min_depth": 1,
+      "min_depth": 2,
       "description": "AND/OR typo in the request-completion condition: a response is issued after only one of the AW/W beats (response without a complete request)."
     }
   ],

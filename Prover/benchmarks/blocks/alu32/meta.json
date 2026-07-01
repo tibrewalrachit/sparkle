@@ -9,13 +9,13 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 1,
+      "min_depth": 2,
       "description": "Missing carry-in in two's-complement subtraction (a + ~b instead of a + ~b + 1): sub(a,a) returns 0xFFFFFFFF."
     },
     {
       "file": "bug2.sv",
       "expect": "bug",
-      "min_depth": 1,
+      "min_depth": 2,
       "description": "Decode copy-paste: the AND opcode executes OR, violating the AND mask-bound property."
     }
   ],

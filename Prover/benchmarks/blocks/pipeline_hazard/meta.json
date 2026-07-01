@@ -9,7 +9,7 @@
     {
       "file": "bug1.sv",
       "expect": "bug",
-      "min_depth": 3,
+      "min_depth": 4,
       "description": "Missing WB->ID bypass path: a distance-2 dependent instruction reads a stale register-file value that the EX forwarding no longer covers (needs a producer, a gap slot, then a consumer)."
     }
   ],
