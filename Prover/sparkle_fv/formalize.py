@@ -1033,9 +1033,11 @@ def _render_props(d: _Design, cap: str, src_info: str) -> str:
         out.append("--       fall back to `sorry`; extend with Array fields if needed).")
     out.append("/-- One clock cycle of the design (word-level netlist semantics). -/")
     if d.regs and all_ok:
-        out.append("def nextState (s : State) (i : Inputs) : State :=")
-        out.append("  { " + ",\n    ".join(f"{f} := {b}" for f, b, _ in updates)
-                   + " }")
+        body = "  { " + ",\n    ".join(f"{f} := {b}" for f, b, _ in updates) + " }"
+        sb = "s" if "s." in body else "_s"
+        ib = "i" if "i." in body else "_i"
+        out.append(f"def nextState ({sb} : State) ({ib} : Inputs) : State :=")
+        out.append(body)
     elif not d.regs:
         out.append("def nextState (s : State) (_i : Inputs) : State := s")
     else:
@@ -1046,7 +1048,7 @@ def _render_props(d: _Design, cap: str, src_info: str) -> str:
         if d.mems:
             out.append("--   (design contains memories; extend State with "
                        "an `Array`/`Vector` field to model them)")
-        out.append("def nextState (s : State) (i : Inputs) : State :=")
+        out.append("def nextState (_s : State) (_i : Inputs) : State :=")
         out.append("  sorry")
     out.append("")
 
@@ -1071,12 +1073,15 @@ def _render_props(d: _Design, cap: str, src_info: str) -> str:
         body = try_tr(p.expr) if p.expr is not None else None
         out.append(f"/-- Property `{p.name}` ({p.kind}); source: {p.src or 'n/a'}.")
         out.append("    The 1-bit condition below must always evaluate to 1. -/")
-        out.append(f"def {pname} (s : State) (i : Inputs) : Bool :=")
         if body is not None:
-            out.append(f"  {body} == 1#1")
+            body_line = f"  {body} == 1#1"
         else:
             ir = _render_ir(p.expr) if p.expr is not None else "<signal not found>"
-            out.append(f"  sorry -- TODO: auto-translation failed; IR: {ir}")
+            body_line = f"  sorry -- TODO: auto-translation failed; IR: {ir}"
+        sb = "s" if "s." in body_line else "_s"
+        ib = "i" if "i." in body_line else "_i"
+        out.append(f"def {pname} ({sb} : State) ({ib} : Inputs) : Bool :=")
+        out.append(body_line)
         out.append("")
 
         out += [
