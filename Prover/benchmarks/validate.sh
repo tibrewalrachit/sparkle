@@ -23,6 +23,7 @@ trap 'rm -rf "$WORK"' EXIT
 
 SOLVER="z3"
 SAFE_DEPTH=15
+BLOCK_TIMEOUT=1200   # pipeline_hazard safe proof needs ~10 min at depth 15
 SOC_SAFE_DEPTH=10
 SOC_TIMEOUT=300
 
@@ -38,9 +39,10 @@ json_get() { # json_get <file> <python-expr over data>
     python3 -c "import json,sys; data=json.load(open(sys.argv[1])); print($2)" "$1"
 }
 
-run_smtbmc() { # run_smtbmc <smt2> <depth> <timeout> ; echo PASSED/FAILED/TIMEOUT/ERROR
-    local smt2="$1" depth="$2" tmo="$3" out rc
-    out=$(timeout "$tmo" yosys-smtbmc -s "$SOLVER" -t "$depth" "$smt2" 2>&1)
+run_smtbmc() { # run_smtbmc <smt2> <depth> <timeout> <extra-flags> ; echo PASSED/FAILED/TIMEOUT/ERROR
+    local smt2="$1" depth="$2" tmo="$3" extra="${4:-}" out rc
+    # shellcheck disable=SC2086
+    out=$(timeout "$tmo" yosys-smtbmc -s "$SOLVER" $extra -t "$depth" "$smt2" 2>&1)
     rc=$?
     if [ $rc -eq 124 ]; then echo TIMEOUT; return; fi
     case "$out" in
@@ -50,8 +52,8 @@ run_smtbmc() { # run_smtbmc <smt2> <depth> <timeout> ; echo PASSED/FAILED/TIMEOU
     esac
 }
 
-check_variant() { # check_variant <dir> <file> <top> <expect safe|bug> <depth> <timeout> <label>
-    local dir="$1" file="$2" top="$3" expect="$4" depth="$5" tmo="$6" label="$7"
+check_variant() { # check_variant <dir> <file> <top> <expect safe|bug> <depth> <timeout> <label> <extra-flags>
+    local dir="$1" file="$2" top="$3" expect="$4" depth="$5" tmo="$6" label="$7" extra="${8:-}"
     local sv="$dir/$file"
     local base="$WORK/$(basename "$dir")_${file%.sv}"
 
@@ -72,7 +74,7 @@ check_variant() { # check_variant <dir> <file> <top> <expect safe|bug> <depth> <
         return 1
     fi
     local status
-    status=$(run_smtbmc "$base.smt2" "$depth" "$tmo")
+    status=$(run_smtbmc "$base.smt2" "$depth" "$tmo" "$extra")
     if [ "$status" = TIMEOUT ]; then
         log "  [SKIP] $label: BMC depth $depth timed out after ${tmo}s (documented, not fatal)"
         skip=$((skip+1)); result "SKIP  $label (timeout @ depth $depth)"
@@ -101,13 +103,20 @@ check_benchmark() { # check_benchmark <dir>
     category=$(json_get "$meta" "data['category']")
     log "=== $name (top=$top, category=$category) ==="
 
-    local safe_depth=$SAFE_DEPTH tmo=120
-    if [ "$category" = soc ]; then safe_depth=$SOC_SAFE_DEPTH; tmo=$SOC_TIMEOUT; fi
+    # Block benchmarks use non-incremental solving (--noincr): z3's
+    # incremental core is pathologically slow on the pipeline_hazard
+    # equivalence obligations (>8 min stuck at step ~5), while fresh
+    # bit-blasted instances finish depth 15 in ~10 min total. The SoC is
+    # the opposite case (large formula, cheap steps) and stays incremental.
+    local safe_depth=$SAFE_DEPTH tmo=$BLOCK_TIMEOUT extra="--noincr"
+    if [ "$category" = soc ]; then
+        safe_depth=$SOC_SAFE_DEPTH; tmo=$SOC_TIMEOUT; extra=""
+    fi
 
     # safe variant
     local safe_file
     safe_file=$(json_get "$meta" "data['safe']['file']")
-    check_variant "$dir" "$safe_file" "$top" safe "$safe_depth" "$tmo" "$name/$safe_file"
+    check_variant "$dir" "$safe_file" "$top" safe "$safe_depth" "$tmo" "$name/$safe_file" "$extra"
 
     # bug variants
     local n i bug_file min_depth bug_depth
@@ -120,7 +129,7 @@ check_benchmark() { # check_benchmark <dir>
         else
             bug_depth=$(( 2 * min_depth )); [ "$bug_depth" -lt 15 ] && bug_depth=15
         fi
-        check_variant "$dir" "$bug_file" "$top" bug "$bug_depth" "$tmo" "$name/$bug_file"
+        check_variant "$dir" "$bug_file" "$top" bug "$bug_depth" "$tmo" "$name/$bug_file" "$extra"
     done
 }
 

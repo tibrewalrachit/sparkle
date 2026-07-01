@@ -40,11 +40,16 @@ def _run(cmd: list[str], timeout_s: float) -> tuple[int, str, float, float]:
 
 
 def smtbmc_bmc(smt2_file: Path, depth: int, timeout_s: float = 600.0,
-               solver: str = "z3") -> BaselineResult:
-    """yosys-smtbmc bounded model check to `depth`."""
+               solver: str = "z3", noincr: bool = True) -> BaselineResult:
+    """yosys-smtbmc bounded model check to `depth`.
+
+    `noincr` defaults on: incremental Z3 stalls on deep combinational
+    obligations (observed on pipeline_hazard), while non-incremental
+    completes; measured to be the stronger baseline configuration.
+    """
     rc, out, dt, rss = _run(
-        ["yosys-smtbmc", "-s", solver, "-t", str(depth), "--noinfo",
-         str(smt2_file)], timeout_s)
+        ["yosys-smtbmc", "-s", solver, "-t", str(depth), "--noinfo"]
+        + (["--noincr"] if noincr else []) + [str(smt2_file)], timeout_s)
     if "[timeout]" in out:
         return BaselineResult("yosys-smtbmc(bmc)", "UNKNOWN", depth, dt, rss,
                               "timeout")
@@ -62,11 +67,11 @@ def smtbmc_bmc(smt2_file: Path, depth: int, timeout_s: float = 600.0,
 
 def smtbmc_induction(smt2_file: Path, depth: int,
                      timeout_s: float = 600.0,
-                     solver: str = "z3") -> BaselineResult:
+                     solver: str = "z3", noincr: bool = True) -> BaselineResult:
     """yosys-smtbmc temporal induction (`-i`): proves if k-inductive."""
     rc, out, dt, rss = _run(
-        ["yosys-smtbmc", "-s", solver, "-i", "-t", str(depth), "--noinfo",
-         str(smt2_file)], timeout_s)
+        ["yosys-smtbmc", "-s", solver, "-i", "-t", str(depth), "--noinfo"]
+        + (["--noincr"] if noincr else []) + [str(smt2_file)], timeout_s)
     if "[timeout]" in out:
         return BaselineResult("yosys-smtbmc(ind)", "UNKNOWN", depth, dt, rss,
                               "timeout")

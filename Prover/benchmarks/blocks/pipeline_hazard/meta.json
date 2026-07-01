@@ -13,6 +13,6 @@
       "description": "Missing WB->ID bypass path: a distance-2 dependent instruction reads a stale register-file value that the EX forwarding no longer covers (needs a producer, a gap slot, then a consumer)."
     }
   ],
-  "description": "3-stage, 32-bit pipelined datapath with WB->ID bypass and WB->EX forwarding, checked against a lock-step architectural model; asserts forwarded operands equal architectural register values.",
+  "description": "3-stage, 32-bit pipelined datapath with WB->ID bypass and WB->EX forwarding, checked against a lock-step architectural model; asserts forwarded operands equal architectural register values. NOTE: the safe-variant depth-15 BMC obligation is intentionally expensive (~10 min with z3, non-incremental mode required; incremental z3 stalls) \u2014 this benchmark anchors the scalability axis of the suite.",
   "state_bits": 372
 }
