@@ -135,21 +135,36 @@ fixpoint, which discards anything non-inductive, and the final invariant is
 re-checked — an LLM hallucination can waste time but cannot produce a wrong
 `SAFE`.
 
-### Autoformalization (formalize.py)
+### Autoformalization (ai_translate.py + translate.py + formalize.py)
 
-The Yosys JSON netlist is bit-indexed; Sparkle's IR is word-level. The
-formalizer therefore runs a *bit-vector net reconstruction* layer that
-groups adjacent bit ids back into word nets and emits `slice`/`concat`
-expressions where cell connections straddle nets. On top of that:
+The conversion target is **idiomatic Sparkle HDL in Lean 4** — the Signal
+DSL a Sparkle designer writes, with the original module structure and
+signal names preserved. Three engines attempt it, in order:
 
-- **`circuitm` mode** (robust, any netlist): emits Lean that rebuilds the
-  design via Sparkle's `CircuitM` builder (`addInput/addOutput/makeWire/`
-  `emitAssign/emitRegister/emitMemory`), covering the full RTL cell library
-  — arithmetic/logic/compare/shift cells, `$mux`/`$pmux`, the complete DFF
-  family (sync/async reset, enables, polarities), and `$mem_v2` memories.
-- **`signal` mode** (idiomatic, small blocks): emits applicative Signal DSL
-  (`Signal.register`, `Signal.mux`, `(· + ·) <$> a <*> b`) matching the
-  style of `Examples/`; falls back to `circuitm` when a construct doesn't fit.
+- **AI agent translation** (`ai_translate.py`, primary when the LLM is
+  configured): GLM-5.2 receives the SystemVerilog source, a Sparkle DSL
+  reference distilled from this repo, and few-shot SV→Lean pairs from
+  `Examples/`, and emits Signal DSL Lean in an agentic
+  translate→validate→repair loop. Each candidate is validated (structural
+  checks, API-name whitelist harvested from the Sparkle source, referenced-
+  name binding; `lake env lean` compile and `#synthesizeVerilog`
+  round-trip equivalence versus the original via Yosys wherever a Lean
+  toolchain exists) and validation errors are fed back for repair.
+- **Deterministic AST translation** (`translate.py`, fallback + reference):
+  Verilator's behavioral XML AST (always blocks, if/case, expressions,
+  original names) is compiled to the same idiomatic Signal DSL — clocked
+  always blocks become `Signal.register` with reset folded in and `let rec`
+  feedback; combinational logic becomes dependency-ordered applicative
+  `let` bindings (`(· + ·) <$> a <*> b`, `Signal.mux`); unpacked arrays
+  become `Signal.memory`/`Signal.memoryComboRead`.
+- **`circuitm` netlist mode** (last-resort semantic anchor): rebuilds the
+  design via Sparkle's `CircuitM` IR builder from the Yosys JSON netlist
+  (bit-vector net reconstruction, full RTL cell library, complete DFF
+  family, `$mem_v2`). Low-level but total.
+
+The Yosys elaboration the prover checks is shared across all three paths,
+anchoring the translation semantically regardless of which engine emitted
+the Lean.
 - **Proof obligations** (`TopProps.lean`): a pure Lean model
   (`Inputs`/`State`/`nextState`/`Reachable`) plus, per assertion, a
   decidable predicate, a PROOF-PLAN comment, an `INVARIANT-SLOT` where the
