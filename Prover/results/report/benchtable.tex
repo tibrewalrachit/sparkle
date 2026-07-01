@@ -1,1 +1,46 @@
-\begin{table}[h]\centering\caption{placeholder}\begin{tabular}{l}\toprule x\\\bottomrule\end{tabular}\end{table}
+\begin{table}[h]
+\centering
+\caption{Per-variant results. State bits from the elaborated model;
+``vlt'' = counterexample confirmed by Verilator replay.}
+\label{tab:per}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccllrclr}
+\toprule
+Benchmark & Variant & Expect & Bits & \sfv{} & Method & t(s) & vlt &
+\tool{smtbmc} & t(s) \\
+\midrule
+alu32 & design.sv & safe & 85 & \checkmark SAFE & kind & 0.1 &  & \checkmark SAFE & 19.0 \\
+alu32 & bug1.sv & bug & 85 & \checkmark BUG & kind-base & 0.4 & \checkmark & \checkmark BUG & 0.2 \\
+alu32 & bug2.sv & bug & 85 & \checkmark BUG & kind-base & 0.5 & \checkmark & \checkmark BUG & 0.1 \\
+async\_handshake & design.sv & safe & 29 & \checkmark SAFE & kind & 0.8 &  & \checkmark SAFE & 1.7 \\
+async\_handshake & bug1.sv & bug & 29 & \checkmark BUG & kind-base & 1.2 & \checkmark & \checkmark BUG & 0.2 \\
+axi\_lite\_slave & design.sv & safe & 12 & \checkmark SAFE & kind & 0.1 &  & \checkmark SAFE & 1.3 \\
+axi\_lite\_slave & bug1.sv & bug & 12 & \checkmark BUG & kind-base & 0.3 & \checkmark & \checkmark BUG & 0.1 \\
+axi\_lite\_slave & bug2.sv & bug & 12 & \checkmark BUG & kind-base & 0.2 & \checkmark & \checkmark BUG & 0.1 \\
+counter\_wrap & design.sv & safe & 10 & \checkmark SAFE & kind & 0.0 &  & \checkmark SAFE & 0.9 \\
+counter\_wrap & bug1.sv & bug & 10 & \checkmark BUG & bmc & 1.4 & \checkmark & \checkmark BUG & 0.3 \\
+gray\_counter & design.sv & safe & 29 & \checkmark SAFE & kind & 0.1 &  & \checkmark SAFE & 2.8 \\
+gray\_counter & bug1.sv & bug & 29 & \checkmark BUG & bmc & 18.9 & \checkmark & \checkmark BUG & 1.6 \\
+lfsr & design.sv & safe & 18 & \checkmark SAFE & kind & 0.0 &  & \checkmark SAFE & 1.1 \\
+lfsr & bug1.sv & bug & 18 & \checkmark BUG & kind-base & 0.1 & \checkmark & \checkmark BUG & 0.1 \\
+memctrl & design.sv & safe & 34 & -- UNKNOWN & bmc & 300.0 &  & -- UNKNOWN & 151.0 \\
+memctrl & bug1.sv & bug & 34 & \checkmark BUG & kind-base & 0.2 & \checkmark & \checkmark BUG & 0.1 \\
+memctrl & bug2.sv & bug & 34 & \checkmark BUG & kind-base & 0.2 & \checkmark & \checkmark BUG & 0.1 \\
+pipeline\_hazard & design.sv & safe & 375 & -- UNKNOWN & bmc & 351.9 &  & -- UNKNOWN & 173.8 \\
+pipeline\_hazard & bug1.sv & bug & 375 & \checkmark BUG & kind-base & 2.1 & \checkmark & \checkmark BUG & 0.2 \\
+priority\_arbiter & design.sv & safe & 23 & \checkmark SAFE & kind & 0.7 &  & \checkmark SAFE & 3.3 \\
+priority\_arbiter & bug1.sv & bug & 23 & \checkmark BUG & bmc & 11.9 & \checkmark & \checkmark BUG & 0.5 \\
+round\_robin\_arbiter & design.sv & safe & 15 & \checkmark SAFE & kind & 0.1 &  & \checkmark SAFE & 2.4 \\
+round\_robin\_arbiter & bug1.sv & bug & 15 & \checkmark BUG & kind-base & 0.1 & \checkmark & \checkmark BUG & 0.1 \\
+round\_robin\_arbiter & bug2.sv & bug & 15 & \checkmark BUG & kind-base & 0.0 & \checkmark & \checkmark BUG & 0.1 \\
+sync\_fifo & design.sv & safe & 15 & \checkmark SAFE & kind & 0.1 &  & \checkmark SAFE & 2.1 \\
+sync\_fifo & bug1.sv & bug & 15 & \checkmark BUG & kind-base & 2.4 & \checkmark & \checkmark BUG & 0.5 \\
+sync\_fifo & bug2.sv & bug & 15 & \checkmark BUG & kind-base & 0.1 & \checkmark & \checkmark BUG & 0.1 \\
+uart\_tx & design.sv & safe & 28 & \checkmark SAFE & kind & 0.2 &  & \checkmark SAFE & 1.6 \\
+uart\_tx & bug1.sv & bug & 28 & \checkmark BUG & bmc & 17.1 & \checkmark & \checkmark BUG & 2.1 \\
+uart\_tx & bug2.sv & bug & 28 & \checkmark BUG & kind-base & 1.6 & \checkmark & \checkmark BUG & 0.2 \\
+rv32i\_soc & design.sv & safe & 1878 & \checkmark SAFE & kind & 4.7 &  & \checkmark SAFE & 160.3 \\
+rv32i\_soc & bug1.sv & bug & 1878 & \checkmark BUG & kind-base & 34.1 & \checkmark & \checkmark BUG & 1.4 \\
+\bottomrule
+\end{tabular}}
+\end{table}

@@ -1,1 +1,25 @@
-placeholder
+Table~\ref{tab:scal} orders the safe variants by model size.
+\begin{table}[h]
+\centering
+\caption{Scalability: safe variants by state bits.}
+\label{tab:scal}
+\begin{tabular}{lrclcr}
+\toprule
+Benchmark & Bits & \sfv{} & t(s) & \tool{smtbmc} & t(s) \\
+\midrule
+counter\_wrap & 10 & SAFE & 0.0 & SAFE & 0.9 \\
+axi\_lite\_slave & 12 & SAFE & 0.1 & SAFE & 1.3 \\
+round\_robin\_arbiter & 15 & SAFE & 0.1 & SAFE & 2.4 \\
+sync\_fifo & 15 & SAFE & 0.1 & SAFE & 2.1 \\
+lfsr & 18 & SAFE & 0.0 & SAFE & 1.1 \\
+priority\_arbiter & 23 & SAFE & 0.7 & SAFE & 3.3 \\
+uart\_tx & 28 & SAFE & 0.2 & SAFE & 1.6 \\
+async\_handshake & 29 & SAFE & 0.8 & SAFE & 1.7 \\
+gray\_counter & 29 & SAFE & 0.1 & SAFE & 2.8 \\
+memctrl & 34 & UNKNOWN & 300.0 & UNKNOWN & 151.0 \\
+alu32 & 85 & SAFE & 0.1 & SAFE & 19.0 \\
+pipeline\_hazard & 375 & UNKNOWN & 351.9 & UNKNOWN & 173.8 \\
+rv32i\_soc & 1878 & SAFE & 4.7 & SAFE & 160.3 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -44,10 +44,11 @@ in about one minute and generated a design-verification convergence dossier
 with 100\% cone-of-influence coverage; property synthesis further exposed
 \emph{two previously unknown bugs} in the SoC (a \texttt{mstatus.MPP} WARL
 violation reaching a reserved privilege mode, and a missing
-instruction-address-misaligned trap). On a 12-design HWMCC-style benchmark
-suite with 19 seeded bugs, \sfv{} resolves more instances than the
+instruction-address-misaligned trap). On a 13-design HWMCC-style benchmark
+suite with 19 seeded bugs, \sfv{} matches the solve count of the
 \tool{yosys-smtbmc} baseline (the engine behind SymbiYosys) under identical
-elaborations, and confirms every found bug in simulation.
+elaborations while proving the safe SoC variant $34\times$ faster, and ---
+uniquely --- confirms all 19 found bugs in Verilator simulation.
 \end{abstract}
 
 \section{Introduction}
@@ -327,17 +328,30 @@ bug it reports is additionally replayed through Verilator.
 
 \paragraph{Scalability.} \input{scaltable}
 
-\paragraph{Discussion.} Three observations. (1)~On bug variants both tools
-are complete up to the bound, so the differentiator is proof power on safe
-variants: the baseline's temporal induction proves only $k$-inductive
-properties, while \sfv{} additionally closes non-inductive properties via
-Houdini strengthening --- the classic FIFO/counter-bound cases. (2)~Verilator
-confirmation adds negligible cost relative to solving and converts every
-formal finding into a simulation artifact. (3)~At SoC scale, word-level
-arrays keep the model compact; the SoC's eight architectural invariants
-prove in seconds per property, indicating that the practical bottleneck for
-full-SoC convergence is property authoring --- which is precisely the step
-the harness automates.
+\paragraph{Discussion.} Both portfolios solve 30 of 32 variants: all 19
+seeded bugs, and 11 of 13 safe variants. The two unsolved safe variants
+(\texttt{memctrl}, \texttt{pipeline\_hazard}) defeat both engines'
+unbounded methods for the same reason --- their inductive invariants require
+quantified facts over memory contents and cross-stage datapath equalities
+that neither temporal induction nor bound-style lemma templates express;
+both tools honestly report a bounded result (proof radius $\geq 45$ resp.\
+explicit timeout) rather than a claim. Beyond the tie in solve count, four
+observations. (1)~\emph{Unbounded proofs scale differently}: on the SoC
+safe variant \sfv{} proves all assertions in 4.7\,s against 160\,s for the
+baseline ($34\times$), and 0.1--0.8\,s against 1--19\,s across the safe
+blocks --- the engine finds the small inductive core once, while temporal
+induction re-solves monolithically. (2)~\emph{Shallow-bug BMC favors the
+baseline} (typically 0.1--2\,s vs.\ 0.1--34\,s): \tool{yosys-smtbmc}'s
+compiled solver loop outpaces our Python-side incremental unrolling, and our
+portfolio pays the induction attempt first; at the 300\,s budget this never
+changes a verdict. (3)~\emph{Every} \sfv{} bug report --- 19 of 19 ---
+replayed to a firing assertion under Verilator, including the memory
+counterexamples once initial RAM state was aligned with two-state
+simulation semantics (\S\ref{sec:cex}); the baseline offers no analogous
+artifact. (4)~At SoC scale, word-level arrays keep the model compact; the
+eight architectural invariants prove in seconds, indicating that the
+practical bottleneck for full-SoC convergence is property authoring ---
+precisely the step the harness automates.
 
 \section{Related Work}
 
