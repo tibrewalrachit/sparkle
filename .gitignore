@@ -18,6 +18,8 @@ lake-packages/
 
 # Generated SystemVerilog files
 *.sv
+# ... but the formal-verification benchmark designs are hand-written sources
+!Prover/benchmarks/**/*.sv
 
 # OS-specific files
 .DS_Store
