@@ -1,0 +1,24 @@
+{
+  "top": "alu32",
+  "category": "alu",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 1,
+      "description": "Missing carry-in in two's-complement subtraction (a + ~b instead of a + ~b + 1): sub(a,a) returns 0xFFFFFFFF."
+    },
+    {
+      "file": "bug2.sv",
+      "expect": "bug",
+      "min_depth": 1,
+      "description": "Decode copy-paste: the AND opcode executes OR, violating the AND mask-bound property."
+    }
+  ],
+  "description": "32-bit ALU with registered operands; asserts algebraic identities (sub(a,a)=0, AND/OR mask bounds, XOR/SLT irreflexivity, shift-by-zero identity).",
+  "state_bits": 67
+}

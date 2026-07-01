@@ -1,0 +1,18 @@
+{
+  "top": "counter_wrap",
+  "category": "counter",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 11,
+      "description": "Off-by-one wrap comparison (cnt == LIMIT+1): the counter reaches LIMIT+1 before wrapping, violating the bound."
+    }
+  ],
+  "description": "8-bit mod-11 wrapping counter with an upper-bound assertion (sanity benchmark).",
+  "state_bits": 8
+}

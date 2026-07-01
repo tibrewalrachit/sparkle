@@ -1,0 +1,24 @@
+{
+  "top": "memctrl",
+  "category": "memory",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 3,
+      "description": "Write-address decoder drops the MSB: writes to addresses 8-15 alias into 0-7, so a read-after-write to an upper address returns stale data."
+    },
+    {
+      "file": "bug2.sv",
+      "expect": "bug",
+      "min_depth": 3,
+      "description": "Spurious write-first forwarding on the read port breaks the read-first contract: a simultaneous write+read of the same address returns the new data while the scoreboard expects the old data."
+    }
+  ],
+  "description": "Memory controller with a 16-entry synchronous-read RAM and a latched-watch-address scoreboard; asserts read-after-write consistency (exercises array reasoning).",
+  "state_bits": 160
+}

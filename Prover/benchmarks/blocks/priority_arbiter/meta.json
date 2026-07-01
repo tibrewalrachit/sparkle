@@ -1,0 +1,18 @@
+{
+  "top": "priority_arbiter",
+  "category": "arbiter",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 11,
+      "description": "Off-by-one starvation threshold (> instead of >=): boost kicks in one cycle late, so the worst-case chain pushes a wait counter to LIMIT+3, violating the bound. Needs ~11 cycles of sustained contention."
+    }
+  ],
+  "description": "4-client fixed-priority arbiter with per-client starvation counters and anti-starvation boost; bounded wait encoded as a safety property (wait_i <= LIMIT+2).",
+  "state_bits": 16
+}

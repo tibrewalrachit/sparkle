@@ -1,0 +1,24 @@
+{
+  "top": "uart_tx",
+  "category": "counter",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 37,
+      "description": "Stop bit drives the line low (mux copy-paste from the start-bit branch). Exposing it requires transmitting a full frame: start + 8 data bits at 4 cycles/bit (deep counterexample, ~37 cycles)."
+    },
+    {
+      "file": "bug2.sv",
+      "expect": "bug",
+      "min_depth": 5,
+      "description": "Wrong terminal count in the baud divider (DIV+1): the baud counter exceeds its bound."
+    }
+  ],
+  "description": "UART 8N1 transmitter with one-hot FSM and baud divider; asserts one-hot/legal state, baud bound, and start/stop-bit line levels.",
+  "state_bits": 18
+}

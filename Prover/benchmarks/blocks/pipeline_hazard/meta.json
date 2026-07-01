@@ -1,0 +1,18 @@
+{
+  "top": "pipeline_hazard",
+  "category": "pipeline",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 3,
+      "description": "Missing WB->ID bypass path: a distance-2 dependent instruction reads a stale register-file value that the EX forwarding no longer covers (needs a producer, a gap slot, then a consumer)."
+    }
+  ],
+  "description": "3-stage, 32-bit pipelined datapath with WB->ID bypass and WB->EX forwarding, checked against a lock-step architectural model; asserts forwarded operands equal architectural register values.",
+  "state_bits": 372
+}

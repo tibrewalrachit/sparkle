@@ -1,0 +1,18 @@
+{
+  "top": "lfsr",
+  "category": "counter",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 2,
+      "description": "Feedback tap on bit 0 dropped: loading 0x0001 then shifting reaches the all-zero lockup state."
+    }
+  ],
+  "description": "16-bit Fibonacci LFSR with a zero-guarded load port; asserts the state never reaches the all-zero lockup state.",
+  "state_bits": 16
+}
