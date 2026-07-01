@@ -274,27 +274,35 @@ class Engine:
               candidates: list[z3.BoolRef] | None = None,
               labels: list[str] | None = None,
               timeout_s: float = 600.0) -> Verdict:
-        """Portfolio: BMC for bugs, then k-induction, then Houdini.
+        """Portfolio: k-induction, then Houdini, then deep BMC.
 
-        Returns the first conclusive verdict; UNKNOWN only if everything
-        is inconclusive within the budget.
+        Induction runs first because its base case already performs BMC up
+        to k-1 (shallow bugs are still found immediately) while inductive
+        safe properties prove in milliseconds instead of paying for a full
+        BMC sweep. Houdini handles non-inductive safe properties. The deep
+        BMC pass last hunts bugs beyond the induction depth.
+
+        Returns the first conclusive verdict; UNKNOWN only if everything is
+        inconclusive within the budget.
         """
         t0 = time.monotonic()
-        budget = timeout_s / 3
-        v = self.bmc(max_bmc, timeout_s=budget)
-        if v.status == "BUG":
-            return v
-        rem = timeout_s - (time.monotonic() - t0)
-        vk = self.k_induction(max_k, timeout_s=max(rem / 2, 5.0))
+        vk = self.k_induction(max_k, timeout_s=timeout_s / 4)
         if vk.status in ("SAFE", "BUG"):
             return vk
+        vh = None
         if candidates:
             rem = timeout_s - (time.monotonic() - t0)
-            vh = self.houdini(candidates, timeout_s=max(rem, 5.0), labels=labels)
+            vh = self.houdini(candidates, timeout_s=max(rem / 3, 5.0),
+                              labels=labels)
             if vh.status == "SAFE":
                 return vh
-            vh.detail += f" | bmc clean to {v.depth}; {vk.detail}"
-            vh.depth = v.depth
-            return vh
-        vk.detail += f" | bmc clean to {v.depth}"
-        return vk
+        # Skip depths already cleared by the induction base case — but only
+        # when induction actually completed them (not on base-case timeout).
+        cleared = max(0, max_k - 1) if vk.detail.startswith("not inductive") \
+            else 0
+        rem = timeout_s - (time.monotonic() - t0)
+        v = self.bmc(max_bmc, timeout_s=max(rem, 5.0), start_depth=cleared)
+        if v.status == "BUG":
+            return v
+        v.detail += f" | {vk.detail}" + (f" | {vh.detail}" if vh else "")
+        return v

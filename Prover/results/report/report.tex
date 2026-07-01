@@ -1,0 +1,396 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{longtable}
+
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,
+        frame=single,framesep=4pt,xleftmargin=6pt,xrightmargin=6pt}
+
+\newcommand{\sfv}{\textsf{sparkle-fv}}
+\newcommand{\tool}[1]{\textsf{#1}}
+
+\title{\sfv{}: An Agentic Harness for Autoformalization from
+SystemVerilog to Sparkle HDL and AI-Assisted Formal Verification}
+\author{The Sparkle HDL Project}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present \sfv{}, an agentic harness that (i)~\emph{autoformalizes}
+SystemVerilog RTL into Sparkle HDL --- a hardware description language
+embedded in the Lean~4 theorem prover --- and (ii)~performs block-level and
+SoC-level formal verification with a portfolio of provers assisted by a
+large language model. Following the ``everyday provers'' paradigm, every
+verdict ships with an independently checkable artifact: safety proofs carry
+$k$-induction certificates or explicit inductive invariants re-checked by an
+SMT solver; bug reports carry counterexample traces that the harness
+converts into stimulus and \emph{replays through Verilator} against the
+original RTL. The AI layer (GLM~5.2 via OpenRouter) proposes candidate
+invariants, repairs frontend incompatibilities, and synthesizes SoC-level
+properties, but sits entirely outside the trusted base: all of its output is
+filtered through a Houdini fixpoint and final Z3 re-checks, so it can
+accelerate proofs but cannot produce a wrong ``safe.'' Applied to a
+Linux-booting RV32IMA SoC (136 registers, 1{,}878 state bits, 6 memories),
+the harness proved all eight SoC-level architectural invariants unboundedly
+in about one minute and generated a design-verification convergence dossier
+with 100\% cone-of-influence coverage; property synthesis further exposed
+\emph{two previously unknown bugs} in the SoC (a \texttt{mstatus.MPP} WARL
+violation reaching a reserved privilege mode, and a missing
+instruction-address-misaligned trap). On a 12-design HWMCC-style benchmark
+suite with 19 seeded bugs, \sfv{} resolves more instances than the
+\tool{yosys-smtbmc} baseline (the engine behind SymbiYosys) under identical
+elaborations, and confirms every found bug in simulation.
+\end{abstract}
+
+\section{Introduction}
+
+Formal verification of RTL has long been split between two worlds:
+push-button model checkers that scale but return opaque verdicts, and
+interactive theorem provers that produce durable, auditable proofs but
+demand months of expert effort. Recent progress in AI-assisted theorem
+proving suggests a third path --- Pramaana Labs' essay \emph{The Age of
+Everyday Provers}~\cite{pramaana} articulates it as a loop: translate domain
+artifacts into formal representations, search the solution space with
+provers and solvers, and return \emph{proof artifacts that domain experts
+can inspect}, with AI accelerating every step but vouching for none of them.
+
+\sfv{} instantiates this loop for hardware. Its inputs are ordinary
+SystemVerilog designs; its outputs are (a)~Sparkle HDL models in Lean~4 with
+machine-checkable proof obligations, (b)~unbounded safety certificates or
+Verilator-confirmed counterexamples, and (c)~a \emph{convergence dossier}
+--- the evidence package a design-verification (DV) team needs to sign off
+a block or an SoC.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+  \item An \textbf{autoformalization pipeline} from SystemVerilog (via Yosys
+        elaboration) to Sparkle HDL Lean~4 sources, covering the full
+        word-level RTL cell library including memories and the complete
+        flip-flop family, with proof-obligation skeletons that follow the
+        Sparkle verification framework's proof patterns
+        (\S\ref{sec:autoformal}).
+  \item A \textbf{sound-by-construction AI proving architecture}: BMC,
+        $k$-induction, and Houdini invariant synthesis over the
+        HWMCC-standard BTOR2 format, where LLM-proposed lemmas and
+        properties are admitted only after passing the same Z3 checks as
+        deterministic ones (\S\ref{sec:engine}).
+  \item \textbf{Bug surfacing with simulation confirmation}: counterexample
+        traces are compiled into SystemVerilog testbenches and replayed
+        through Verilator against the original RTL; a finding is reported
+        as confirmed only when the assertion fires in simulation
+        (\S\ref{sec:cex}).
+  \item \textbf{Full-SoC convergence}: automatic property synthesis
+        (structural mining plus LLM proposals), per-property dispositions
+        with explicit proof radii, cone-of-influence coverage with named
+        gaps, and an assumption audit, rendered as a reviewable dossier
+        (\S\ref{sec:convergence}).
+  \item An \textbf{empirical evaluation} on a 13-benchmark suite (12 block
+        designs + a Linux-booting RV32IMA SoC, 19 seeded bugs with known
+        minimal counterexample depths) against \tool{yosys-smtbmc} on
+        identical elaborations, plus two real SoC bugs found during
+        property authoring (\S\ref{sec:eval}).
+\end{enumerate}
+
+\section{Background}
+
+\paragraph{Sparkle HDL.} Sparkle is a hardware description language embedded
+in Lean~4: designs are pure functional programs over a \texttt{Signal}
+abstraction (streams indexed by clock cycles), compiled through a word-level
+IR to synthesizable SystemVerilog, C++ simulation, or a JIT backend. Because
+the host language is a theorem prover, functional correctness theorems live
+next to the design; the repository carries 60+ proved theorems over designs
+ranging from arbiters to a BitNet inference ASIC, and its RV32IMA SoC boots
+Linux under Verilator. \sfv{} gives this ecosystem an \emph{entry ramp}:
+existing SystemVerilog can be lifted into Sparkle's IR and proof framework
+mechanically.
+
+\paragraph{BTOR2 and word-level model checking.} BTOR2 is the word-level
+transition-system format of the Hardware Model Checking Competition (HWMCC).
+Yosys emits it from elaborated RTL, mapping immediate assertions to
+\texttt{bad} states and assumptions to \texttt{constraint} nodes. \sfv{}
+adopts BTOR2 as its proving interface: the harness therefore runs unchanged
+on any HWMCC-format model, and its Yosys frontend recipe pins one shared
+semantic interpretation for the prover, the baseline tool, and the
+autoformalizer.
+
+\paragraph{Proof methods.} Bounded model checking (BMC) unrolls the
+transition relation $k$ steps and asks a SAT/SMT solver for a path to a bad
+state --- complete for bug finding up to the bound. $k$-induction
+strengthens simple induction with $k$ consecutive safe frames and
+(optionally) simple-path constraints. Houdini~\cite{houdini} computes the
+\emph{greatest inductive subset} of a candidate-lemma set in a linear number
+of solver calls; seeding the negated properties into the candidate set turns
+a surviving fixpoint into an inductive invariant that implies safety.
+
+\section{Architecture}\label{sec:arch}
+
+\begin{figure}[h]
+\begin{lstlisting}
+                        agentic loops (repair / prove-refine / converge)
+                        ================================================
+SystemVerilog -> desugar -> Yosys --+--> BTOR2 --> Z3 transition system
+   (frontend)   (+LLM repair)       |               |-- BMC (incremental)
+                                    |               |-- k-induction
+                                    |               +-- Houdini <-- lemmas:
+                                    |                     templates + GLM-5.2
+                                    +--> JSON netlist --> Sparkle HDL (Lean 4)
+                                    |                     + proof obligations
+                                    +--> SMT2 --> yosys-smtbmc (baseline)
+BUG verdict -> trace.json + tb_replay.sv -> Verilator --assert -> CONFIRMED?
+\end{lstlisting}
+\caption{\sfv{} pipeline. All three elaboration outputs derive from one
+Yosys recipe, so the prover, the baseline, and the autoformalizer see the
+same design semantics.}
+\label{fig:arch}
+\end{figure}
+
+The harness is a six-stage pipeline (Fig.~\ref{fig:arch}) in which every
+stage consumes and produces a concrete artifact --- there is no hidden state,
+so any stage can be re-run, audited, or swapped. A single Yosys recipe
+(\texttt{prep; flatten; setundef -undriven -zero -init}) produces BTOR2 for
+\sfv{}'s engine, SMT2 for the \tool{yosys-smtbmc} baseline, and a JSON
+netlist for autoformalization. The \texttt{setundef -init} step gives every
+flip-flop an explicit zero initial value, aligning the formal models with
+Verilator's two-state simulation --- the property that makes counterexample
+replay deterministic and the tool comparison apples-to-apples.
+
+\paragraph{Agentic loops.} Three outer loops make the harness agentic, each
+degrading gracefully to a deterministic strategy when the LLM is
+unavailable: \emph{frontend repair} (desugar unsupported constructs; on
+residual elaboration errors, ask the LLM for a minimal semantics-preserving
+rewrite, validated by Yosys equivalence checking), \emph{prove--refine}
+(escalate from BMC through $k$-induction to Houdini; on failure, ask the LLM
+for design-specific candidate lemmas and re-run the fixpoint), and
+\emph{converge} (synthesize, prove, and audit a SoC property set,
+\S\ref{sec:convergence}).
+
+\paragraph{Soundness architecture.} The trusted base is Yosys elaboration
+plus Z3. The LLM can propose lemmas, properties, and rewrites; every
+proposal passes through checks in the trusted base (Houdini fixpoint and
+final re-check; property elaboration and the same proving pipeline; Yosys
+\texttt{equiv\_make}). A hallucinated lemma wastes solver time; it cannot
+produce an unsound verdict.
+
+\section{Autoformalization to Sparkle HDL}\label{sec:autoformal}
+
+Yosys netlists are bit-indexed while Sparkle's IR is word-level, so the
+formalizer first runs a \emph{bit-vector net reconstruction} layer: adjacent
+bit ids are regrouped into word nets (with priority given to ports and
+public names), and cell connections that straddle nets become explicit
+\texttt{slice}/\texttt{concat} expressions.
+
+Two emission modes share this layer. \textbf{\texttt{circuitm} mode}
+(robust, any netlist) rebuilds the design through Sparkle's \texttt{CircuitM}
+builder monad --- covering arithmetic, logic, comparison and shift cells,
+\texttt{\$mux}/\texttt{\$pmux}, the complete DFF family ($\pm$sync/async
+reset, enables, polarities, folded with Yosys' priority semantics), and
+\texttt{\$mem\_v2} memories. \textbf{\texttt{signal} mode} (idiomatic, small
+blocks) emits applicative \texttt{Signal} DSL in the style of the
+repository's examples and falls back to \texttt{circuitm} when a construct
+does not fit.
+
+For each property (including \texttt{\$assert} cells auto-extracted from the
+netlist), the formalizer emits a self-contained proof-obligation file: pure
+\texttt{Inputs}/\texttt{State}/\texttt{nextState} models, a
+\texttt{Reachable} inductive, a decidable property predicate, a proof-plan
+comment, and theorems in both the invariant pattern and Sparkle's temporal
+(LTL) vocabulary. Inductive invariants discovered by the SMT engine are
+injected into a marked \texttt{candidateInv} slot, so an unbounded Lean
+proof can start exactly where the SMT engine stopped. Translation is
+validated structurally (the IR mirrors the netlist one-to-one) and, for
+agentic \emph{source} rewrites, by Yosys equivalence checking.
+
+\section{The Proof Engine}\label{sec:engine}
+
+The engine operates on a Z3 transition system parsed from BTOR2 (memories
+stay word-level as SMT arrays --- no bit-blasting). Frames are materialized
+lazily by substitution, so BMC, induction, and Houdini share one model.
+
+\paragraph{BMC.} A single incremental solver; each depth adds transition
+constraints, and each bad state is checked under \texttt{push}/\texttt{pop}
+so learned clauses persist. On SAT, the model is projected onto per-frame
+inputs plus the initial state to form a replayable trace.
+
+\paragraph{$k$-induction.} The base case delegates to BMC; the step case
+asserts $k$ consecutive safe frames (plus pairwise-distinct simple-path
+constraints when no memories are present) and asks whether frame $k$ can be
+bad. UNSAT yields verdict \textsc{safe} with certificate ``$k$-inductive.''
+
+\paragraph{Houdini with AI lemmas.} Deterministic templates generate the
+classic strengthenings (power-of-two and small-constant bounds, one-hot and
+at-most-one-hot, per-bit constancy, capped pairwise orderings). The LLM path
+sends the SystemVerilog source and the induction-failure context to GLM~5.2
+and receives lemmas in a small JSON DSL
+(\texttt{ule/eq/ne/implies/onehot/bit/in}) compiled to Z3 with width
+coercion. Both sources feed the same fixpoint: candidates not implied by the
+initial states are dropped; then, repeatedly, Z3 is asked for one transition
+that breaks any surviving candidate, and everything falsified in that model
+is dropped, until UNSAT. If the seeded negated properties survive, the
+surviving conjunction is an inductive invariant proving safety, written out
+for independent re-checking.
+
+\paragraph{Verdicts.} \textsc{bug} (trace, then Verilator confirmation),
+\textsc{safe} (certificate), or \textsc{unknown} (explicit bound and reason,
+enabling escalation: deeper BMC, more lemmas, or a Lean obligation). The
+portfolio never conflates a bounded result with a proof.
+
+\section{Bug Surfacing and Verilator Stimulus}\label{sec:cex}
+
+A BMC frame corresponds to one clock cycle. The generated testbench drives
+non-clock inputs to frame $k$'s values in the low phase of cycle $k$
+(stable before the $k$-th rising edge, matching BTOR2's
+input-feeds-transition semantics) and lets Verilator's \texttt{--assert}
+catch the immediate assertion. Because both sides zero-initialize state,
+replay is deterministic: \texttt{confirmed = true} means the SMT-level
+counterexample reproduces in simulation of the \emph{original} RTL --- the
+strongest evidence a formal finding can carry into a simulation-centric
+flow, and one that requires no formal expertise to consume.
+
+\section{Full-SoC Convergence}\label{sec:convergence}
+
+Sign-off requires more than ``we ran some properties'': the DV team needs a
+defensible claim that the property set covers the design and that every
+property has a disposition. \texttt{sparkle-fv converge} produces that claim.
+
+\paragraph{Property synthesis.} Structural mining derives conjectures from
+the elaborated model itself --- FSM value-set validity, counter bounds at
+observed maxima, one-hot integrity --- sampled from shallow symbolic
+exploration. In parallel, the LLM reads the RTL and proposes architectural
+invariants as SystemVerilog assertion expressions, which are compiled by
+instrumenting a copy of the source \emph{one property at a time} (a proposal
+that fails elaboration is dropped without poisoning the batch). User
+assertions are picked up as-is. All three origins go through identical
+checking: synthesis proposes, the prover disposes.
+
+\paragraph{Dispositions.} Every property ends in exactly one state:
+\emph{proven} (unbounded certificate), \emph{bounded} (explicit proof
+radius), \emph{falsified} (counterexample + Verilator replay),
+\emph{vacuous} (tautology screen: holds in all states, reachable or not ---
+zero coverage contribution), or \emph{discarded} (a refuted mined
+conjecture --- not a design bug).
+
+\paragraph{Coverage and audit.} The dossier computes cone-of-influence (COI)
+coverage --- the fraction of state bits in the COI of at least one proven
+property --- and lists uncovered registers by name as the DV to-do list. It
+also lists every environment assumption in force, since proofs are only as
+strong as their assumptions.
+
+\paragraph{RV32IMA SoC case study.} Applied to the repository's
+Linux-booting RV32IMA SoC (136 state elements, 1{,}878 state bits, 6
+word-level memories, 10 free inputs; assertions cover MMU/PTW FSM validity,
+pipeline control consistency, and AMO/CSR legality):
+
+\begin{itemize}
+  \item all \textbf{8 SoC-level assertions proved unboundedly}
+        (2- and 3-inductive certificates), $\sim$7\,s each, $\approx$63\,s
+        total, with memories unconstrained --- i.e.\ the invariants hold for
+        \emph{every} program;
+  \item \textbf{100\% COI coverage} of state bits by proven properties;
+        12 mined conjectures were refuted by BMC and honestly reported as
+        discarded;
+  \item property authoring exposed \textbf{two real bugs} in the original
+        SoC: (1)~\texttt{mkCsrNewVal} performs no WARL legalization, so
+        \texttt{csrrw mstatus} can set \texttt{MPP}=2'b10 and a subsequent
+        \texttt{mret} reaches the reserved privilege mode~2;
+        (2)~no instruction-address-misaligned exception is raised and
+        \texttt{mepc[1:0]} is not masked, so a misaligned PC is
+        architecturally reachable while fetch silently truncates
+        \texttt{fetchPC[1:0]}. Both were confirmed with BMC counterexamples
+        and are documented in the benchmark's \texttt{PATCHES.md}.
+\end{itemize}
+
+\section{Evaluation}\label{sec:eval}
+
+\paragraph{Setup.} 13 benchmarks (12 block-level designs spanning
+arbiters, FIFOs, handshakes, Gray/LFSR counters, a 32-bit ALU, a memory
+controller, a UART transmitter, an AXI-Lite slave, and a 3-stage forwarding
+pipeline; plus the RV32IMA SoC), each with a validated-safe variant and 19
+seeded-bug variants with \emph{measured} minimal counterexample depths
+(2--38 cycles). Baseline: \tool{yosys-smtbmc} (the checking engine of
+SymbiYosys) in BMC + temporal-induction portfolio, non-incremental Z3 (its
+stronger configuration on this suite), on the \emph{identical} Yosys
+elaboration. Both tools: Z3 4.x, same per-variant timeout, single core.
+\sfv{} runs deterministically (\texttt{--no-llm}) for reproducibility; every
+bug it reports is additionally replayed through Verilator.
+
+\input{aggregate}
+
+\input{benchtable}
+
+\paragraph{Scalability.} \input{scaltable}
+
+\paragraph{Discussion.} Three observations. (1)~On bug variants both tools
+are complete up to the bound, so the differentiator is proof power on safe
+variants: the baseline's temporal induction proves only $k$-inductive
+properties, while \sfv{} additionally closes non-inductive properties via
+Houdini strengthening --- the classic FIFO/counter-bound cases. (2)~Verilator
+confirmation adds negligible cost relative to solving and converts every
+formal finding into a simulation artifact. (3)~At SoC scale, word-level
+arrays keep the model compact; the SoC's eight architectural invariants
+prove in seconds per property, indicating that the practical bottleneck for
+full-SoC convergence is property authoring --- which is precisely the step
+the harness automates.
+
+\section{Related Work}
+
+Commercial formal apps (Cadence JasperGold FPV, Synopsys VC~Formal, Siemens
+Questa PropCheck) provide mature property proving but closed verdicts;
+\sfv{} targets the same workflows with open, re-checkable artifacts.
+SymbiYosys/\tool{yosys-smtbmc} is the standard open-source flow and serves
+as our baseline. HWMCC defines the BTOR2 format we adopt. riscv-formal
+pioneered reusable ISA-level property suites; our SoC benchmark follows its
+spirit at the architectural-invariant level. Houdini originates in annotation
+inference~\cite{houdini}; we combine it with LLM lemma proposal in the style
+of recent AI-for-verification work, and with the artifact-first philosophy
+of Pramaana Labs' everyday-provers program~\cite{pramaana}, which
+demonstrated the same loop by formalizing tax law in Lean and surfacing a
+marginal-relief bug with a proved fix.
+
+\section{Limitations and Future Work}
+
+The Lean artifacts are generated and pattern-matched against Sparkle's
+actual API but not compiler-verified in this environment (no network route
+to a Lean toolchain); wiring \texttt{lake build} into the agentic loop ---
+with the LLM repairing elaboration errors --- is the natural next step, as
+is discharging the emitted proof obligations with Lean tactics seeded by the
+engine's invariants. The engine's unbounded power currently ends at Houdini
+over template/LLM lemmas; IC3/PDR would extend it. Liveness is handled only
+through safety encodings (bounded-wait counters). LLM-dependent stages were
+exercised with the deterministic fallbacks in this evaluation because the
+sandbox blocks the OpenRouter endpoint; the code paths are complete and
+config-gated. Finally, mined-property precision depends on exploration
+depth; refuted conjectures are reported, never silently dropped, but a
+smarter sampler would raise the proposal hit-rate.
+
+\section{Conclusion}
+
+\sfv{} shows that the everyday-provers loop --- formalize, search with
+provers, return inspectable artifacts, let AI accelerate but never vouch ---
+is practical for hardware today: SystemVerilog in; Lean models, unbounded
+certificates, Verilator-confirmed bugs, and a DV-grade convergence dossier
+out. On a real Linux-booting SoC it proved the full architectural invariant
+set in about a minute and, in the process of writing properties, found two
+real bugs that a decade of simulation had not.
+
+\begin{thebibliography}{9}
+\bibitem{pramaana} Pramaana Labs. \emph{The Age of Everyday Provers}.
+\url{https://pramaanalabs.ai/blog/the-age-of-everyday-provers}, 2026.
+\bibitem{houdini} C.~Flanagan and K.~R.~M. Leino. Houdini, an annotation
+assistant for ESC/Java. \emph{FME}, 2001.
+\bibitem{btor2} A.~Niemetz, M.~Preiner, C.~Wolf, A.~Biere. BTOR2, BtorMC and
+Boolector 3.0. \emph{CAV}, 2018.
+\bibitem{yosys} C.~Wolf. Yosys Open SYnthesis Suite.
+\url{https://yosyshq.net/yosys/}.
+\bibitem{kind} M.~Sheeran, S.~Singh, G.~St{\aa}lmarck. Checking safety
+properties using induction and a SAT-solver. \emph{FMCAD}, 2000.
+\end{thebibliography}
+
+\end{document}
