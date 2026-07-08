@@ -118,7 +118,56 @@ zero `sorry`s.
 | liveness (framework §2) | `write_completes_in_two_cycles`, `read_completes_in_two_cycles` | bounded latency |
 | efficiency (framework §3) | `subordinate_accepts_from_reset` | work-conserving |
 
-## 3. Model notes
+## 3. Spec → RTL → Signal DSL convergence
+
+Beyond the spec-model theorems, the implementation is *proven* to refine
+the spec — every link in the chain below is machine-checked:
+
+```
+AXIProps spec FSMs  (WrState / RdState — spec-cited theorems)
+   ▲  decodeWr / decodeRd  (injective abstraction — bisimulation)
+   │  wrStepRTL_refines, rdStepRTL_refines            [AXIRefinement]
+RTL FSMs on BitVec state  (4 reachable write states, 2 read states)
+   │  wrStepGates_eq_RTL, rdStepGates_eq_RTL          [AXIRefinement]
+sum-of-products gate equations
+   │  writeFsmBody_succ, readFsmBody_succ — proven by `rfl`
+   │  (definitional equality, no gap)                 [LiteSubordinate]
+Signal DSL loop bodies (register + mux + beq combinators)
+   │  writeFsm_refines_spec, readFsm_refines_spec:
+   │  any fixpoint of the body (Signal.loop's contract) equals the
+   │  spec trace at every cycle                       [LiteSubordinate]
+#synthesizeVerilog  →  SystemVerilog
+```
+
+Key theorems in `Sparkle/Verification/AXIRefinement.lean`:
+
+| Theorem | Statement |
+|---------|-----------|
+| `wrStepRTL_refines` / `rdStepRTL_refines` | Bisimulation squares: one RTL step through `decode` = one spec step |
+| `decodeWr_injective` / `decodeRd_injective` | The abstraction is a bisimulation, not a lossy simulation |
+| `decodeWr_inv` / `decodeRd_inv` | Every RTL state satisfies the §A2.3.2.x invariants |
+| `wrOutputs_refine` / `rdOutputs_refine` | AWREADY/WREADY/BVALID/ARREADY/RVALID match spec outputs |
+| `wr_trace_refines` / `rd_trace_refines` | Cycle-accurate: for every input stream and cycle, RTL state = spec state |
+| `mealy_fixpoint_unique` | The register-feedback fixpoint is unique (the `Signal.loop` contract) |
+| `rtl_bvalid_only_after_aw_and_w`, `rtl_rvalid_only_after_ar` | §A2.3.2.1/§A2.3.2.2 transferred to the RTL FSM |
+
+Key theorems in `Examples/AXI/LiteSubordinate.lean`:
+
+| Theorem | Statement |
+|---------|-----------|
+| `writeFsmBody_zero/succ`, `readFsmBody_zero/succ` | The Signal loop body is **definitionally** (`rfl`) the proven gate function, per cycle |
+| `writeFsm_refines_spec` / `readFsm_refines_spec` | Any body fixpoint abstracts to the spec FSM trace at every cycle |
+| `writeFsm_bvalid_refines` | The implementation's BVALID equals the spec's BVALID at every cycle |
+| `latchBody_zero/succ` | Payload latches implement `AXIProps.liteStep`'s capture rule (`rfl`) |
+
+The one remaining trust assumption is `Signal.loop` itself (an `opaque`
+compiler primitive): its documented contract is to return a fixpoint of
+the body, and `mealy_fixpoint_unique` proves any such fixpoint has the
+verified behavior. Synthesis (`#synthesizeVerilog`) emits three modules:
+`writeFsmSignal`, `readFsmSignal`, and the full `axi5LiteSubordinate`
+(AXI ⇄ register-file bridge, §B2.1.5 use case).
+
+## 4. Model notes
 
 - The subordinate model implements the *permissions* the spec grants
   (AWREADY/WREADY/ARREADY defaulting HIGH per §A2.3 R8, W4) and is proven to

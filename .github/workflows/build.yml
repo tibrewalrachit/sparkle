@@ -45,7 +45,10 @@ jobs:
         lake env lean --run Examples/Sparkle16/ISAProofTests.lean
 
     - name: Run AXI Protocol Proofs (ARM IHI 0022 Issue L)
-      run: lake build Sparkle.Verification.AXIProps
+      run: |
+        lake build Sparkle.Verification.AXIProps
+        lake build Sparkle.Verification.AXIRefinement
+        lake build Examples.AXI
 
     - name: Build RV32 Signal DSL
       run: lake build Examples.RV32
