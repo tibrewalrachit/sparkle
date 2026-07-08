@@ -587,7 +587,82 @@ theorem RResp.encode_decode : ∀ v : BitVec 3, RResp.encode (RResp.decode v) = 
 theorem rresp_okay_is_zero : RResp.encode .okay = 0#3 := rfl
 
 /-!
+### Default 2-bit responses (Tables A3.27/A3.30, BRESP_WIDTH/RRESP_WIDTH = 2)
+
+`BRESP_WIDTH`/`RRESP_WIDTH` take values 0, 2, or 3 with **default 2**
+(Tables A3.27/A3.30); the 3-bit encodings above are only required when
+optional features are enabled. The default 2-bit field — also the
+encoding used by classic AXI4-Lite — carries the first four rows of
+Tables A3.28/A3.31. The width-0 case has no wire at all and "is assumed
+to be 0b000 (OKAY)" (§A3.3.1/§A3.3.2), captured by `bresp_okay_is_zero`
+and `rresp_okay_is_zero`.
+-/
+
+/-- 2-bit response codes: the default-width response field (write and
+    read use the same four codes at width 2). -/
+inductive Resp2 where
+  | okay | exokay | slverr | decerr
+  deriving Repr, DecidableEq, BEq, Inhabited
+
+/-- 2-bit encodings — first four rows of Tables A3.28/A3.31. -/
+def Resp2.encode : Resp2 → BitVec 2
+  | .okay   => 0b00#2
+  | .exokay => 0b01#2
+  | .slverr => 0b10#2
+  | .decerr => 0b11#2
+
+def Resp2.decode (v : BitVec 2) : Resp2 :=
+  if v = 0b00#2 then .okay
+  else if v = 0b01#2 then .exokay
+  else if v = 0b10#2 then .slverr
+  else .decerr
+
+/-- The default-width encoding is lossless. -/
+theorem Resp2.decode_encode (r : Resp2) : Resp2.decode (Resp2.encode r) = r := by
+  cases r <;> decide
+
+/-- Every 2-bit value decodes uniquely — the default-width table is
+    exhaustive. -/
+theorem Resp2.encode_decode : ∀ v : BitVec 2, Resp2.encode (Resp2.decode v) = v := by
+  decide
+
+/-- §A3.3.1: the default response is OKAY at width 2 as well. -/
+theorem resp2_okay_is_zero : Resp2.encode .okay = 0#2 := rfl
+
+/-- Embedding of the 2-bit codes into the 3-bit write-response table
+    (rows 0b000–0b011 of Table A3.28). -/
+def Resp2.toBResp : Resp2 → BResp
+  | .okay   => .okay
+  | .exokay => .exokay
+  | .slverr => .slverr
+  | .decerr => .decerr
+
+/-- Embedding of the 2-bit codes into the 3-bit read-response table
+    (rows 0b000–0b011 of Table A3.31). -/
+def Resp2.toRResp : Resp2 → RResp
+  | .okay   => .okay
+  | .exokay => .exokay
+  | .slverr => .slverr
+  | .decerr => .decerr
+
+/-- Width-consistency: a 2-bit response, viewed in the 3-bit table, has
+    the zero-extended encoding — the two widths agree on their common
+    rows of Table A3.28. -/
+theorem Resp2.bresp_width_consistent (r : Resp2) :
+    BResp.encode (Resp2.toBResp r) = (Resp2.encode r).setWidth 3 := by
+  cases r <;> decide
+
+/-- Width-consistency for the read-response table (Table A3.31). -/
+theorem Resp2.rresp_width_consistent (r : Resp2) :
+    RResp.encode (Resp2.toRResp r) = (Resp2.encode r).setWidth 3 := by
+  cases r <;> decide
+
+/-!
 ### AXI5-Lite response restriction (§B2.1.5)
+
+A Lite subordinate uses the default response width (2 bits — the wider
+encodings exist only for optional features a Lite interface does not
+enable), so the Lite mapping targets `Resp2`.
 -/
 
 /-- Outcomes a Lite subordinate can experience when servicing an access. -/
@@ -603,14 +678,9 @@ inductive LiteOutcome where
   | decodeError
   deriving Repr, DecidableEq
 
-/-- Response mapping of an AXI5-Lite write subordinate. -/
-def liteWriteResp : LiteOutcome → BResp
-  | .success          => .okay
-  | .subordinateError => .slverr
-  | .decodeError      => .decerr
-
-/-- Response mapping of an AXI5-Lite read subordinate. -/
-def liteReadResp : LiteOutcome → RResp
+/-- Response mapping of an AXI5-Lite subordinate (default 2-bit width;
+    write and read channels use the same mapping). -/
+def liteResp : LiteOutcome → Resp2
   | .success          => .okay
   | .subordinateError => .slverr
   | .decodeError      => .decerr
@@ -618,19 +688,23 @@ def liteReadResp : LiteOutcome → RResp
 /--
   §B2.1.5: "Exclusive accesses are not supported" + Table A3.28: EXOKAY
   "is only permitted for an exclusive write." A Lite subordinate never
-  responds EXOKAY on the write channel.
+  responds EXOKAY (on either response channel — the mapping is shared).
 -/
-theorem lite_write_never_exokay (o : LiteOutcome) :
-    liteWriteResp o ≠ .exokay := by
-  cases o <;> simp [liteWriteResp]
+theorem lite_never_exokay (o : LiteOutcome) :
+    liteResp o ≠ .exokay := by
+  cases o <;> simp [liteResp]
 
-/--
-  §B2.1.5 + Table A3.31: EXOKAY "is only permitted for an exclusive
-  read." A Lite subordinate never responds EXOKAY on the read channel.
--/
+/-- The same restriction viewed in the 3-bit write-response table
+    (Table A3.28), via the width-consistent embedding. -/
+theorem lite_write_never_exokay (o : LiteOutcome) :
+    (liteResp o).toBResp ≠ BResp.exokay := by
+  cases o <;> simp [liteResp, Resp2.toBResp]
+
+/-- The same restriction viewed in the 3-bit read-response table
+    (Table A3.31). -/
 theorem lite_read_never_exokay (o : LiteOutcome) :
-    liteReadResp o ≠ .exokay := by
-  cases o <;> simp [liteReadResp]
+    (liteResp o).toRResp ≠ RResp.exokay := by
+  cases o <;> simp [liteResp, Resp2.toRResp]
 
 /-!
 ## Part 5 — Data correctness of a Lite subordinate (memory refinement)

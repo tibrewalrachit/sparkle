@@ -65,8 +65,15 @@ register-based components such as Sparkle peripherals.
 
 ### §A3.3.1 Write response, Table A3.28 BRESP encodings (pages 61–62)
 
+`BRESP_WIDTH` ∈ {0, 2, 3}, **default 2** (Table A3.27); width 3 is required
+only when optional features (Untranslated_Transactions v2/v3,
+WriteDeferrable) are enabled, and width 0 means BRESP is absent and
+"assumed to be 0b000 (OKAY)".
+
 3-bit encodings: `0b000` OKAY, `0b001` EXOKAY, `0b010` SLVERR, `0b011` DECERR,
 `0b100` DEFER, `0b101` TRANSFAULT, `0b110` RESERVED, `0b111` UNSUPPORTED.
+The default 2-bit field carries the first four rows (the classic
+AXI4-Lite encoding).
 
 > OKAY: "The transaction was successful. If the transaction includes write
 > data, the updated value is observable."
@@ -109,9 +116,11 @@ zero `sorry`s.
 | §A2.3.2.2 Rd2 | `rvalid_no_rready_wait` | READY-independence |
 | §A2.3 R5 (R channel) | `rvalid_stable_until_rready` | case + simp |
 | §A2.6 T2 | `no_spurious_read_data` (trace-level: #R ≤ #AR along every input trace) | trace induction |
-| Table A3.28 | `BResp.decode_encode`, `BResp.encode_decode`, `bresp_okay_is_zero` | round-trip |
-| Table A3.31 | `RResp.decode_encode`, `RResp.encode_decode`, `rresp_okay_is_zero` | round-trip |
-| §B2.1.5 no exclusives | `lite_write_never_exokay`, `lite_read_never_exokay` | enumeration |
+| Table A3.28 (3-bit, optional features) | `BResp.decode_encode`, `BResp.encode_decode`, `bresp_okay_is_zero` | round-trip |
+| Table A3.31 (3-bit, optional features) | `RResp.decode_encode`, `RResp.encode_decode`, `rresp_okay_is_zero` | round-trip |
+| Tables A3.27/A3.30 (default width 2, AXI4-Lite encoding) | `Resp2.decode_encode`, `Resp2.encode_decode`, `resp2_okay_is_zero` | round-trip |
+| Width relationship (2-bit rows ⊂ 3-bit tables) | `Resp2.bresp_width_consistent`, `Resp2.rresp_width_consistent` | enumeration |
+| §B2.1.5 no exclusives | `lite_never_exokay` (+ 3-bit views `lite_write_never_exokay`, `lite_read_never_exokay`) | enumeration |
 | Table A3.28 OKAY semantics | `write_commit_observable`, `write_commit_other_addrs_unchanged` | refinement |
 | Table A3.31 OKAY semantics | `read_data_matches_memory` (invariant) | invariant |
 | §A3.1 Q1 | `aligned_access_no_4KB_crossing` (general), `lite32_no_4KB_crossing` | arithmetic |
