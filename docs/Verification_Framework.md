@@ -207,6 +207,8 @@ Sparkle/Verification/
   ISAProps.lean       -- ISA encode/decode proofs
   ALUProps.lean       -- ALU correctness
   ArbiterProps.lean   -- Arbiter safety/liveness/fairness
+  AXIProps.lean       -- AMBA AXI protocol rules (ARM IHI 0022 Issue L),
+                      --   see docs/AXI_Spec_Map.md for the rule→theorem map
 ```
 
 Each file is **self-contained**: it defines its own types and functions,
