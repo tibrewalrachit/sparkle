@@ -167,7 +167,30 @@ verified behavior. Synthesis (`#synthesizeVerilog`) emits three modules:
 `writeFsmSignal`, `readFsmSignal`, and the full `axi5LiteSubordinate`
 (AXI ⇄ register-file bridge, §B2.1.5 use case).
 
-## 4. Model notes
+## 4. Cross-verification layer: Veil (SMT)
+
+`verification/veil-axi/` re-expresses the two protocol FSMs as
+[Veil](https://github.com/verse-lab/veil) transition systems and
+re-establishes the §A2.3.2.1/§A2.3.2.2 invariants **automatically via
+SMT** (z3/cvc5), plus bounded-model-checking traces for non-vacuity
+(transactions complete) — an independent engine and an independent
+(event-interleaved) semantics confirming the interactive proofs:
+
+| Veil artifact | Mirrors | Checked by |
+|---------------|---------|------------|
+| `AXIWriteChannel.safety [bvalid_only_after_aw_and_w]` | `AXIProps.bvalid_only_after_aw_and_w` | `#check_invariants` (SMT induction) |
+| `AXIReadChannel.safety [rvalid_only_after_ar]` | `AXIProps.rvalid_only_after_ar` | `#check_invariants` (SMT induction) |
+| `sat trace [write_transaction_completes]` | `write_completes_in_two_cycles` | BMC |
+| `unsat trace [no_bvalid_violation]` (any 6 events) | trace-level safety §A2.6 | BMC |
+
+Each handshake is one atomic event in the Veil model; a synchronous
+`wrStep` cycle composes up to three events, so event-level invariance
+covers every cycle-level schedule. See `verification/veil-axi/README.md`
+for the full correspondence table and build instructions (standalone
+Lake project — Veil pins Lean v4.24.0 and fetches SMT solvers at build
+time; runs as the `veil-axi` CI job).
+
+## 5. Model notes
 
 - The subordinate model implements the *permissions* the spec grants
   (AWREADY/WREADY/ARREADY defaulting HIGH per §A2.3 R8, W4) and is proven to

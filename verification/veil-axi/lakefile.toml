@@ -1,0 +1,15 @@
+name = "veil-axi"
+version = "0.1.0"
+defaultTargets = ["VeilAXI"]
+
+# Veil: foundational framework for automated verification of transition
+# systems (https://github.com/verse-lab/veil). Veil pins its own Lean
+# toolchain (see lean-toolchain in this directory) which is why this is a
+# standalone sub-project rather than part of the main Sparkle lakefile.
+[[require]]
+name = "veil"
+git = "https://github.com/verse-lab/veil.git"
+rev = "main"
+
+[[lean_lib]]
+name = "VeilAXI"

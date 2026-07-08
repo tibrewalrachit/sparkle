@@ -66,3 +66,28 @@ jobs:
         else
           echo "iverilog not installed, skipping"
         fi
+
+  # SMT-checked AXI protocol models (Veil transition systems), see
+  # verification/veil-axi/README.md. Standalone job: Veil pins its own
+  # Lean toolchain and downloads z3/cvc5 during the build.
+  # NOTE: experimental — flip continue-on-error to false once this job
+  # has run green; it cannot be exercised in sandboxed dev environments
+  # because Veil fetches dependencies and solvers from GitHub releases.
+  veil-axi:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Elan
+      run: |
+        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+    - name: Build Veil AXI models (SMT invariant checking + BMC)
+      working-directory: verification/veil-axi
+      run: |
+        lake update
+        lake build
