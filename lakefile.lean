@@ -39,6 +39,9 @@ lean_lib «Examples.YOLOv8» where
 lean_lib «Examples.Arbiter» where
   roots := #[`Examples.Arbiter]
 
+lean_lib «Examples.AXI» where
+  roots := #[`Examples.AXI]
+
 lean_lib «IP.Video» where
   roots := #[`IP.Video]
 

@@ -207,7 +207,20 @@ Sparkle/Verification/
   ISAProps.lean       -- ISA encode/decode proofs
   ALUProps.lean       -- ALU correctness
   ArbiterProps.lean   -- Arbiter safety/liveness/fairness
+  AXIProps.lean       -- AMBA AXI protocol rules (ARM IHI 0022 Issue L),
+                      --   see docs/AXI_Spec_Map.md for the rule→theorem map
+  AXIRefinement.lean  -- Spec ↔ RTL bisimulation + cycle-accurate trace
+                      --   refinement for the AXI5-Lite subordinate
 ```
+
+### Beyond Pattern 4: proven Signal-level refinement (AXI example)
+
+The AXI5-Lite subordinate (`Examples/AXI/LiteSubordinate.lean`)
+strengthens Pattern 4 from "impl mirrors spec, checked by simulation" to
+a machine-checked chain: spec FSM ↔ (bisimulation, `decide`) RTL FSM on
+BitVec states = (`rfl`) Signal DSL loop body, so any `Signal.loop`
+fixpoint reproduces the spec trace at every cycle
+(`writeFsm_refines_spec`). See §3 of docs/AXI_Spec_Map.md.
 
 Each file is **self-contained**: it defines its own types and functions,
 then proves properties.  No cross-file dependencies within Verification/.

@@ -44,6 +44,12 @@ jobs:
         lake build Sparkle.Verification.ISAProps
         lake env lean --run Examples/Sparkle16/ISAProofTests.lean
 
+    - name: Run AXI Protocol Proofs (ARM IHI 0022 Issue L)
+      run: |
+        lake build Sparkle.Verification.AXIProps
+        lake build Sparkle.Verification.AXIRefinement
+        lake build Examples.AXI
+
     - name: Build RV32 Signal DSL
       run: lake build Examples.RV32
 
@@ -60,3 +66,24 @@ jobs:
         else
           echo "iverilog not installed, skipping"
         fi
+
+  # SMT-checked AXI protocol models (Veil transition systems), see
+  # verification/veil-axi/README.md. Standalone job: Veil pins its own
+  # Lean toolchain and downloads z3/cvc5 during the build.
+  veil-axi:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Elan
+      run: |
+        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+    - name: Build Veil AXI models (SMT invariant checking + BMC)
+      working-directory: verification/veil-axi
+      run: |
+        lake update
+        lake build

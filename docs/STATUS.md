@@ -13,7 +13,7 @@
 | 2 | **Linux Boot Idle-Loop Skipping** | Extend self-loop oracle to detect WFI/idle loops during Linux boot (larger pcTolerance, interrupt-aware timer advancement) | Not started |
 | 3 | **Verified Standard IP — Parameterized FIFO** | Generic depth/width FIFO with power-of-2 depth, extending SyncFIFO pattern | Not started |
 | 4 | **Verified Standard IP — N-way Arbiter** | Generalize 2-client round-robin arbiter to N clients | Not started |
-| 5 | **Verified Standard IP — AXI4-Lite / TileLink** | Bus protocol interfaces with formal properties | Not started |
+| 5 | **Verified Standard IP — AXI4-Lite / TileLink** | Bus protocol interfaces with formal properties | AXI5-Lite DONE — spec rules from ARM IHI 0022 Issue L verified (`AXIProps.lean`), spec↔RTL bisimulation + cycle-accurate trace refinement (`AXIRefinement.lean`), Signal DSL subordinate with `rfl`-proven body equivalence + Verilog synthesis (`Examples/AXI/LiteSubordinate.lean`), SMT cross-verification via Veil (`verification/veil-axi/`); see `docs/AXI_Spec_Map.md`. TileLink TODO |
 | 6 | **GPGPU / Vector Core** | Apply VDD framework to highly concurrent, memory-bound accelerator architectures | Not started |
 | 7 | **FPGA Tape-out Flow** | End-to-end examples deploying Sparkle-generated Linux SoCs to physical FPGAs | Not started |
 
@@ -629,7 +629,7 @@ SyncFIFO:
 | **Credit-based flow control** | TODO | Backpressure via credits instead of ready/valid |
 | **Arbiter (N-way)** | TODO | Generalize 2-client arbiter to N clients |
 | **Crossbar** | TODO | N×M crossbar switch with arbitration |
-| **AXI4-Lite** | TODO | AXI4-Lite master/slave interfaces |
+| **AXI4-Lite** | DONE (AXI5-Lite) | Spec rules from ARM IHI 0022 Issue L machine-checked; proven spec↔RTL bisimulation; synthesizable subordinate with `rfl`-proven loop-body equivalence (`Examples/AXI/LiteSubordinate.lean`, `docs/AXI_Spec_Map.md`) |
 | **Cache** | TODO | Direct-mapped / set-associative cache with write-back |
 | **TileLink** | TODO | TileLink Uncached Lightweight (TL-UL) |
 
