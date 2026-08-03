@@ -1,0 +1,15 @@
+\begin{table}[h]
+\centering
+\caption{Aggregate results: 32 variants (19 seeded bugs).
+``Solved'' = expected verdict returned (unbounded proof for safe variants,
+counterexample for bug variants).}
+\label{tab:agg}
+\begin{tabular}{lccc}
+\toprule
+Tool & Solved & Total wall time (s) & Bugs Verilator-confirmed \\
+\midrule
+\sfv{} (BMC + $k$-ind + Houdini) & \textbf{30/32} & 752 & 19/19 \\
+\tool{yosys-smtbmc} (BMC + temporal ind.) & 30/32 & 530 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,759 @@
+[
+  {
+    "bench": "alu32",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "alu",
+    "state_bits": 85,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 1,
+      "time_s": 0.136,
+      "detail": "1-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 11,
+      "time_s": 19.032,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "alu32",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "alu",
+    "state_bits": 85,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 2,
+      "time_s": 0.448,
+      "detail": "assertion 'benchmarks/blocks/alu32/bug1.sv:69.34-71.55' fails at cycle 2",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 2,
+      "time_s": 0.176,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "alu32",
+    "variant": "bug2.sv",
+    "expect": "bug",
+    "category": "alu",
+    "state_bits": 85,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 2,
+      "time_s": 0.456,
+      "detail": "assertion 'benchmarks/blocks/alu32/bug2.sv:73.34-75.46' fails at cycle 2",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 2,
+      "time_s": 0.139,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "async_handshake",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "handshake",
+    "state_bits": 29,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 5,
+      "time_s": 0.78,
+      "detail": "5-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 7,
+      "time_s": 1.743,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "async_handshake",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "handshake",
+    "state_bits": 29,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 6,
+      "time_s": 1.238,
+      "detail": "assertion 'benchmarks/blocks/async_handshake/bug1.sv:103.17-104.35' fails at cycle 6",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 6,
+      "time_s": 0.167,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "axi_lite_slave",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "bus",
+    "state_bits": 12,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 2,
+      "time_s": 0.136,
+      "detail": "2-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 10,
+      "time_s": 1.257,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "axi_lite_slave",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "bus",
+    "state_bits": 12,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 3,
+      "time_s": 0.339,
+      "detail": "assertion 'benchmarks/blocks/axi_lite_slave/bug1.sv:92.54-93.28' fails at cycle 3",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 3,
+      "time_s": 0.103,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "axi_lite_slave",
+    "variant": "bug2.sv",
+    "expect": "bug",
+    "category": "bus",
+    "state_bits": 12,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 2,
+      "time_s": 0.172,
+      "detail": "assertion 'benchmarks/blocks/axi_lite_slave/bug2.sv:89.20-90.39' fails at cycle 2",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 2,
+      "time_s": 0.09,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "counter_wrap",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "counter",
+    "state_bits": 10,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 2,
+      "time_s": 0.026,
+      "detail": "2-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 10,
+      "time_s": 0.949,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "counter_wrap",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "counter",
+    "state_bits": 10,
+    "sparkle": {
+      "status": "BUG",
+      "method": "bmc",
+      "depth": 12,
+      "time_s": 1.387,
+      "detail": "assertion 'benchmarks/blocks/counter_wrap/bug1.sv:31.32-33.30' fails at cycle 12",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 12,
+      "time_s": 0.273,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "gray_counter",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "counter",
+    "state_bits": 29,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 2,
+      "time_s": 0.08,
+      "detail": "2-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 10,
+      "time_s": 2.835,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "gray_counter",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "counter",
+    "state_bits": 29,
+    "sparkle": {
+      "status": "BUG",
+      "method": "bmc",
+      "depth": 17,
+      "time_s": 18.92,
+      "detail": "assertion 'benchmarks/blocks/gray_counter/bug1.sv:52.19-53.33' fails at cycle 17",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 17,
+      "time_s": 1.585,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "lfsr",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "crypto",
+    "state_bits": 18,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 2,
+      "time_s": 0.031,
+      "detail": "2-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 10,
+      "time_s": 1.072,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "lfsr",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "crypto",
+    "state_bits": 18,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 3,
+      "time_s": 0.069,
+      "detail": "assertion 'benchmarks/blocks/lfsr/bug1.sv:41.32-43.33' fails at cycle 3",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 3,
+      "time_s": 0.101,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "memctrl",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "memory",
+    "state_bits": 34,
+    "sparkle": {
+      "status": "UNKNOWN",
+      "method": "bmc",
+      "depth": 40,
+      "time_s": 300.032,
+      "detail": "timeout | not inductive up to k=12 | safety lemma not inductive relative to 6 surviving candidates",
+      "solved": false,
+      "bounded_depth": 40
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc",
+      "status": "UNKNOWN",
+      "depth": 45,
+      "time_s": 150.983,
+      "max_rss_mb": 75.0,
+      "solved": false
+    }
+  },
+  {
+    "bench": "memctrl",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "memory",
+    "state_bits": 34,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 4,
+      "time_s": 0.21,
+      "detail": "assertion 'benchmarks/blocks/memctrl/bug1.sv:79.21-80.45' fails at cycle 4",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 4,
+      "time_s": 0.126,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "memctrl",
+    "variant": "bug2.sv",
+    "expect": "bug",
+    "category": "memory",
+    "state_bits": 34,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 4,
+      "time_s": 0.212,
+      "detail": "assertion 'benchmarks/blocks/memctrl/bug2.sv:79.21-80.45' fails at cycle 4",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 4,
+      "time_s": 0.138,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "pipeline_hazard",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "pipeline",
+    "state_bits": 375,
+    "sparkle": {
+      "status": "UNKNOWN",
+      "method": "bmc",
+      "depth": 8,
+      "time_s": 351.872,
+      "detail": "timeout | base case: solver unknown | safety lemma not inductive relative to 6 surviving candidates",
+      "solved": false,
+      "bounded_depth": 8
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc",
+      "status": "UNKNOWN",
+      "depth": 45,
+      "time_s": 173.828,
+      "max_rss_mb": 0.0,
+      "solved": false
+    }
+  },
+  {
+    "bench": "pipeline_hazard",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "pipeline",
+    "state_bits": 375,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 4,
+      "time_s": 2.105,
+      "detail": "assertion 'benchmarks/blocks/pipeline_hazard/bug1.sv:148.36-149.38' fails at cycle 4",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 4,
+      "time_s": 0.167,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "priority_arbiter",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "arbiter",
+    "state_bits": 23,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 5,
+      "time_s": 0.701,
+      "detail": "5-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 7,
+      "time_s": 3.303,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "priority_arbiter",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "arbiter",
+    "state_bits": 23,
+    "sparkle": {
+      "status": "BUG",
+      "method": "bmc",
+      "depth": 12,
+      "time_s": 11.906,
+      "detail": "assertion 'benchmarks/blocks/priority_arbiter/bug1.sv:65.33-66.32' fails at cycle 12",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 12,
+      "time_s": 0.549,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "round_robin_arbiter",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "arbiter",
+    "state_bits": 15,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 2,
+      "time_s": 0.079,
+      "detail": "2-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 10,
+      "time_s": 2.439,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "round_robin_arbiter",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "arbiter",
+    "state_bits": 15,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 2,
+      "time_s": 0.126,
+      "detail": "assertion 'benchmarks/blocks/round_robin_arbiter/bug1.sv:72.51-76.56' fails at cycle 2",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 2,
+      "time_s": 0.098,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "round_robin_arbiter",
+    "variant": "bug2.sv",
+    "expect": "bug",
+    "category": "arbiter",
+    "state_bits": 15,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 1,
+      "time_s": 0.044,
+      "detail": "assertion 'benchmarks/blocks/round_robin_arbiter/bug2.sv:66.32-68.50' fails at cycle 1",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 1,
+      "time_s": 0.076,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "sync_fifo",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "fifo",
+    "state_bits": 15,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 2,
+      "time_s": 0.051,
+      "detail": "2-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 10,
+      "time_s": 2.107,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "sync_fifo",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "fifo",
+    "state_bits": 15,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 9,
+      "time_s": 2.353,
+      "detail": "assertion 'benchmarks/blocks/sync_fifo/bug1.sv:70.48-72.48' fails at cycle 9",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 9,
+      "time_s": 0.455,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "sync_fifo",
+    "variant": "bug2.sv",
+    "expect": "bug",
+    "category": "fifo",
+    "state_bits": 15,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 3,
+      "time_s": 0.131,
+      "detail": "assertion 'benchmarks/blocks/sync_fifo/bug2.sv:66.33-69.49' fails at cycle 3",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 3,
+      "time_s": 0.112,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "uart_tx",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "counter",
+    "state_bits": 28,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 2,
+      "time_s": 0.169,
+      "detail": "2-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 10,
+      "time_s": 1.615,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "uart_tx",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "counter",
+    "state_bits": 28,
+    "sparkle": {
+      "status": "BUG",
+      "method": "bmc",
+      "depth": 38,
+      "time_s": 17.051,
+      "detail": "assertion 'benchmarks/blocks/uart_tx/bug1.sv:107.30-108.32' fails at cycle 38",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 38,
+      "time_s": 2.117,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "uart_tx",
+    "variant": "bug2.sv",
+    "expect": "bug",
+    "category": "counter",
+    "state_bits": 28,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 6,
+      "time_s": 1.63,
+      "detail": "assertion 'benchmarks/blocks/uart_tx/bug2.sv:94.55-96.29' fails at cycle 6",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 6,
+      "time_s": 0.179,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "rv32i_soc",
+    "variant": "design.sv",
+    "expect": "safe",
+    "category": "soc",
+    "state_bits": 1878,
+    "sparkle": {
+      "status": "SAFE",
+      "method": "kind",
+      "depth": 3,
+      "time_s": 4.693,
+      "detail": "3-inductive",
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(ind)",
+      "status": "SAFE",
+      "depth": 9,
+      "time_s": 160.317,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  },
+  {
+    "bench": "rv32i_soc",
+    "variant": "bug1.sv",
+    "expect": "bug",
+    "category": "soc",
+    "state_bits": 1878,
+    "sparkle": {
+      "status": "BUG",
+      "method": "kind-base",
+      "depth": 4,
+      "time_s": 34.096,
+      "detail": "assertion 'benchmarks/soc/rv32i_soc/bug1.sv:1559.54-1562.51' fails at cycle 4",
+      "verilator_confirmed": true,
+      "solved": true
+    },
+    "baseline": {
+      "tool": "yosys-smtbmc(bmc)",
+      "status": "BUG",
+      "depth": 4,
+      "time_s": 1.411,
+      "max_rss_mb": 0.0,
+      "solved": true
+    }
+  }
+]

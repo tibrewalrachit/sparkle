@@ -1,0 +1,24 @@
+{
+  "top": "sync_fifo",
+  "category": "fifo",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 9,
+      "description": "Off-by-one full threshold (count == DEPTH+1): a 9th enqueue is accepted, overflowing the FIFO. Needs 8 back-to-back enqueues to expose."
+    },
+    {
+      "file": "bug2.sv",
+      "expect": "bug",
+      "min_depth": 3,
+      "description": "Simultaneous enqueue+dequeue race: if/else priority drops the dequeue, double-counting occupancy and breaking pointer/count consistency."
+    }
+  ],
+  "description": "Depth-8 synchronous FIFO with explicit count (style of Sparkle/Library/Queue SyncFIFO); asserts no overflow/underflow, pointer/count consistency, and empty/full gating.",
+  "state_bits": 74
+}

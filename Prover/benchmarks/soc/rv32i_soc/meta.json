@@ -1,0 +1,18 @@
+{
+  "top": "rv32i_soc",
+  "category": "soc",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 4,
+      "description": "Decoder regression: SC.W (store-conditional) is classified as a memory-to-register instruction (id_isAMO used instead of id_isAMOrw in id_memToReg), routing a store through the load writeback path. Violates FV6 (memToReg == memRead decode consistency) and FV7 (SC.W never memToReg) as soon as an SC.W instruction reaches the EX stage: reset, fetch, decode, execute (counterexample at BMC step 4)."
+    }
+  ],
+  "description": "RV32IMASU SoC (5-stage pipeline, CLINT, CSR, UART 8250 MMIO, S-mode CSRs, trap delegation, Sv32 MMU with 4-entry TLB and hardware PTW). Copied from verilator/rv32i_soc.sv with minimal yosys-0.33 compatibility patches (see PATCHES.md). Eight SoC-level invariants (FV1-FV8) are embedded between '// SPARKLE-FV ASSERTIONS BEGIN/END' markers: MMU/PTW FSM state validity, D-side-walk/ifetch-walk tagging consistency, delayed-flush squash correctness, load-writeback pipeline consistency, SC.W decode consistency, and AMO pending-write exclusivity. Instruction/data memories and the register file are unconstrained, so the invariants are checked for every possible program.",
+  "state_bits": 3200
+}

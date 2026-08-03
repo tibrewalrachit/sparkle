@@ -1,0 +1,24 @@
+{
+  "top": "round_robin_arbiter",
+  "category": "arbiter",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 2,
+      "description": "Rotation mask off-by-one: the mask includes the last-granted client, so one client can be granted twice in a row while another keeps requesting (fairness/alternation violation)."
+    },
+    {
+      "file": "bug2.sv",
+      "expect": "bug",
+      "min_depth": 1,
+      "description": "Broken priority isolation in the masked path: multiple masked requests are granted at once, violating mutual exclusion."
+    }
+  ],
+  "description": "4-client round-robin arbiter (RoundRobin.lean semantics generalized to 4 clients); asserts mutual exclusion, no grant without request, work conservation, and round-robin alternation.",
+  "state_bits": 10
+}

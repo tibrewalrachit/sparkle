@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+fv_out/
+*.aux
+*.log
+*.out
+*.toc
+results/translations/*/xml/

@@ -1,0 +1,18 @@
+{
+  "top": "gray_counter",
+  "category": "counter",
+  "safe": {
+    "file": "design.sv",
+    "expect": "safe"
+  },
+  "bugs": [
+    {
+      "file": "bug1.sv",
+      "expect": "bug",
+      "min_depth": 17,
+      "description": "Carry bug at the nibble boundary: binary counter skips a value when the low nibble is 0xF, so the Gray image changes by more than one bit. Needs 16 counted steps to expose."
+    }
+  ],
+  "description": "8-bit Gray-code counter; asserts the encoding invariant and the classic one-bit-change-per-step invariant.",
+  "state_bits": 25
+}
